@@ -3,694 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GLITCH CHANNEL — Online</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<title>GLITCH CHANNEL</title>
+
 <style>
-  :root{
-    --bg: #0A0A0C;
-    --surface: #18181C;
-    --surface-2: #1F1F24;
-    --line: #2C2C32;
-    --bone: #EDEAE0;
-    --bone-dim: #8C897E;
-    --green: #39FF6A;
-    --green-dim: #1F8A3E;
-    --magenta: #FF2E88;
-    --amber: #FFB627;
-    --font-display: 'Archivo Black', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-  }
+:root{
+  --bg:#0a0a0c;
+  --green:#39FF6A;
+  --dim:#8a8a8a;
+  --line:#1f1f24;
+}
 
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--bg);
+  color:white;
+  font-family: monospace;
+  overflow:hidden;
+}
 
-  body{
-    background: var(--bg);
-    color: var(--bone);
-    font-family: var(--font-mono);
-    overflow-x: hidden;
-    position: relative;
-  }
+/* ruido leve */
+body::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity:0.06;
+  pointer-events:none;
+}
 
-  ::selection{ background: var(--green); color: #000; }
+.container{
+  text-align:center;
+  z-index:2;
+}
 
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  }
+/* título glitch */
+h1{
+  font-size:44px;
+  letter-spacing:3px;
+  margin-bottom:10px;
+  position:relative;
+}
 
-  /* ---------- noise overlay ---------- */
-  .noise{
-    position: fixed; inset: 0; pointer-events: none; z-index: 200;
-    opacity: 0.035; mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
+h1::before,
+h1::after{
+  content:"GLITCH CHANNEL";
+  position:absolute;
+  left:0;
+  width:100%;
+  overflow:hidden;
+}
 
-  .scanline{
-    position: fixed; inset: 0; pointer-events:none; z-index: 201;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.025) 0px,
-      rgba(255,255,255,0.025) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-  }
+h1::before{
+  color:var(--green);
+  top:-2px;
+  animation:glitch1 2s infinite linear alternate;
+}
 
-  /* ---------- top bar ---------- */
-  header{
-    position: sticky; top:0; z-index: 100;
-    display:flex; align-items:center; justify-content:space-between;
-    padding: 18px 32px;
-    background: rgba(10,10,12,0.85);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
-  }
-  .logo{
-    font-family: var(--font-display);
-    font-size: 20px;
-    letter-spacing: -0.5px;
-    display:flex; align-items:center; gap:10px;
-    cursor:default;
-  }
-  .logo .dot{
-    width:9px; height:9px; border-radius:50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green), 0 0 16px var(--green);
-    animation: pulse 1.8s ease-in-out infinite;
-  }
-  @keyframes pulse{
-    0%,100%{ opacity:1; transform:scale(1); }
-    50%{ opacity:0.5; transform:scale(0.8); }
-  }
-  nav{ display:flex; gap:28px; align-items:center; }
-  nav a{
-    color: var(--bone-dim);
-    text-decoration:none;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 500;
-    transition: color 0.2s;
-    position:relative;
-  }
-  nav a:hover, nav a:focus-visible{ color: var(--green); }
-  nav a:focus-visible{ outline: 1px solid var(--green); outline-offset: 4px; }
+h1::after{
+  color:#ff2e88;
+  top:2px;
+  animation:glitch2 2s infinite linear alternate;
+}
 
-  .live-tag{
-    display:flex; align-items:center; gap:7px;
-    font-size: 11px; letter-spacing:1.5px;
-    color: var(--magenta);
-    border: 1px solid var(--magenta);
-    padding: 5px 10px;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  .live-tag .rec{
-    width:6px; height:6px; border-radius:50%; background: var(--magenta);
-    animation: pulse 1s ease-in-out infinite;
-  }
+@keyframes glitch1{
+  0%{transform:translate(0);}
+  20%{transform:translate(-2px,1px);}
+  40%{transform:translate(2px,-1px);}
+  60%{transform:translate(-1px,0);}
+  100%{transform:translate(0);}
+}
 
-  /* ---------- hero / tuner ---------- */
-  .hero{
-    min-height: 92vh;
-    display:flex; flex-direction:column; justify-content:center;
-    padding: 60px 32px 40px;
-    position: relative;
-  }
+@keyframes glitch2{
+  0%{transform:translate(0);}
+  25%{transform:translate(2px,0);}
+  50%{transform:translate(-2px,1px);}
+  100%{transform:translate(0);}
+}
 
-  .freq-readout{
-    font-family: var(--font-mono);
-    font-size: clamp(60px, 13vw, 150px);
-    font-weight: 800;
-    line-height: 0.9;
-    color: var(--bone);
-    letter-spacing: -2px;
-    position: relative;
-    display:inline-block;
-    margin-bottom: 4px;
-  }
-  .freq-readout .mhz{
-    font-size: 0.22em;
-    color: var(--green);
-    vertical-align: super;
-    letter-spacing: 2px;
-    margin-left: 8px;
-  }
-  /* glitch RGB split, triggered occasionally */
-  .freq-readout .num-wrap{ position: relative; display:inline-block; }
-  .freq-readout.glitching .num-wrap{
-    animation: glitchShift 0.28s steps(2,end) 1;
-  }
-  .freq-readout.glitching .num-wrap::before,
-  .freq-readout.glitching .num-wrap::after{
-    content: '88.6';
-    position:absolute; left:0; top:0; width:100%; height:100%;
-    background: var(--bg);
-    overflow:hidden;
-    pointer-events:none;
-  }
-  .freq-readout.glitching .num-wrap::before{
-    color: var(--magenta);
-    clip-path: polygon(0 20%, 100% 20%, 100% 35%, 0 35%);
-    transform: translate(-6px,0);
-  }
-  .freq-readout.glitching .num-wrap::after{
-    color: var(--green);
-    clip-path: polygon(0 60%, 100% 60%, 100% 78%, 0 78%);
-    transform: translate(6px,0);
-  }
-  @keyframes glitchShift{
-    0%{ transform: translate(0,0); }
-    30%{ transform: translate(-3px,1px); }
-    60%{ transform: translate(3px,-1px); }
-    100%{ transform: translate(0,0); }
-  }
+/* botón */
+button{
+  margin-top:25px;
+  background:transparent;
+  border:1px solid var(--green);
+  color:var(--green);
+  padding:14px 26px;
+  cursor:pointer;
+  letter-spacing:2px;
+  transition:.2s;
+}
 
-  .tagline{
-    font-family: var(--font-display);
-    font-size: clamp(22px, 3.4vw, 38px);
-    line-height: 1.05;
-    max-width: 16ch;
-    margin-top: 18px;
-    color: var(--bone);
-  }
-  .tagline span{ color: var(--green); }
+button:hover{
+  background:var(--green);
+  color:black;
+}
 
-  .hero-sub{
-    margin-top: 22px;
-    color: var(--bone-dim);
-    font-size: 14px;
-    max-width: 50ch;
-    line-height: 1.7;
-  }
+/* estado */
+#status{
+  margin-top:18px;
+  color:var(--dim);
+  font-size:13px;
+}
 
-  .hero-controls{
-    display:flex; align-items:center; gap:18px;
-    margin-top: 38px;
-    flex-wrap: wrap;
-  }
+/* live dot */
+.live{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:20px;
+  color:var(--green);
+  font-size:12px;
+  letter-spacing:2px;
+}
 
-  .play-btn{
-    display:flex; align-items:center; gap:12px;
-    background: var(--green);
-    color: #06140A;
-    border: none;
-    padding: 16px 26px;
-    font-family: var(--font-mono);
-    font-weight: 800;
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor:pointer;
-    transition: transform 0.15s, box-shadow 0.15s;
-    box-shadow: 0 0 0 0 rgba(57,255,106,0);
-  }
-  .play-btn:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 0 var(--green-dim);
-  }
-  .play-btn:active{ transform: translateY(0px); box-shadow:none; }
-  .play-btn:focus-visible{ outline: 2px solid var(--bone); outline-offset: 3px; }
-  .play-btn svg{ width:16px; height:16px; }
+.dot{
+  width:6px;
+  height:6px;
+  background:var(--green);
+  border-radius:50%;
+  animation:pulse 1s infinite;
+}
 
-  .now-playing{
-    font-size: 12px;
-    color: var(--bone-dim);
-    display:flex; flex-direction:column; gap:4px;
-  }
-  .now-playing .label{ letter-spacing:1.5px; color: var(--magenta); font-weight:700; }
-  .now-playing .track{ color: var(--bone); font-size:13px; }
-
-  /* live waveform bars */
-  .wave{
-    display:flex; align-items:flex-end; gap:3px; height: 28px;
-  }
-  .wave span{
-    width:3px; background: var(--green);
-    animation: bar 1.1s ease-in-out infinite;
-  }
-  .wave span:nth-child(1){ height:40%; animation-delay:0s; }
-  .wave span:nth-child(2){ height:80%; animation-delay:0.1s; }
-  .wave span:nth-child(3){ height:55%; animation-delay:0.2s; }
-  .wave span:nth-child(4){ height:90%; animation-delay:0.3s; }
-  .wave span:nth-child(5){ height:35%; animation-delay:0.4s; }
-  .wave span:nth-child(6){ height:65%; animation-delay:0.5s; }
-  .wave span:nth-child(7){ height:45%; animation-delay:0.6s; }
-  @keyframes bar{
-    0%,100%{ transform: scaleY(0.4); }
-    50%{ transform: scaleY(1); }
-  }
-
-  /* dial strip */
-  .dial-strip{
-    margin-top: 56px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 18px 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .dial-track{
-    display:flex; gap:0; font-size: 13px; color: var(--bone-dim);
-    white-space: nowrap;
-  }
-  .dial-track span{
-    padding: 0 14px;
-    border-right: 1px solid var(--line);
-  }
-  .dial-track .tick-strong{ color: var(--green); font-weight:700; }
-
-  /* ---------- section shared ---------- */
-  section{ padding: 100px 32px; max-width: 1180px; margin: 0 auto; }
-  .eyebrow{
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--magenta); font-weight:700; margin-bottom: 14px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .eyebrow::before{
-    content:''; width: 24px; height:1px; background: var(--magenta);
-  }
-  h2{
-    font-family: var(--font-display);
-    font-size: clamp(28px, 4vw, 46px);
-    line-height: 1.05;
-    margin-bottom: 18px;
-    max-width: 18ch;
-  }
-  .section-intro{
-    color: var(--bone-dim); font-size:14px; line-height:1.8; max-width: 60ch; margin-bottom: 56px;
-  }
-
-  /* ---------- schedule ---------- */
-  .schedule-list{
-    border-top: 1px solid var(--line);
-  }
-  .show-row{
-    display:grid;
-    grid-template-columns: 90px 1fr 200px 90px;
-    align-items:center;
-    gap: 20px;
-    padding: 22px 0;
-    border-bottom: 1px solid var(--line);
-    transition: background 0.2s;
-    cursor: default;
-  }
-  .show-row:hover{ background: var(--surface); }
-  .show-time{
-    font-size: 13px; color: var(--green); font-weight:700;
-  }
-  .show-name{
-    font-family: var(--font-display);
-    font-size: 18px;
-    color: var(--bone);
-  }
-  .show-host{
-    font-size: 12px; color: var(--bone-dim);
-  }
-  .show-tag{
-    font-size: 10px; letter-spacing:1px; text-transform:uppercase;
-    color: var(--bone-dim);
-    border: 1px solid var(--line);
-    padding: 5px 9px;
-    text-align:center;
-    justify-self: end;
-  }
-  .show-row.on-air .show-tag{
-    color: var(--magenta); border-color: var(--magenta);
-  }
-  .show-row.on-air .show-time{ color: var(--magenta); }
-
-  @media (max-width: 640px){
-    .show-row{ grid-template-columns: 1fr; gap:6px; padding: 18px 0; }
-    .show-tag{ justify-self:start; margin-top:6px; }
-  }
-
-  /* ---------- frequencies / shows grid ---------- */
-  .freq-grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--line);
-    border: 1px solid var(--line);
-  }
-  .freq-card{
-    background: var(--bg);
-    padding: 32px 26px;
-    position: relative;
-    transition: background 0.25s;
-  }
-  .freq-card:hover{ background: var(--surface); }
-  .freq-num{
-    font-size: 12px; color: var(--green-dim); letter-spacing:1px; margin-bottom:18px;
-  }
-  .freq-card:hover .freq-num{ color: var(--green); }
-  .freq-card h3{
-    font-family: var(--font-display);
-    font-size: 19px;
-    margin-bottom: 10px;
-    line-height:1.2;
-  }
-  .freq-card p{
-    font-size: 13px; color: var(--bone-dim); line-height:1.7;
-  }
-
-  @media (max-width: 860px){
-    .freq-grid{ grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 560px){
-    .freq-grid{ grid-template-columns: 1fr; }
-  }
-
-  /* ---------- about / signal section ---------- */
-  .signal-section{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 70px;
-    align-items: center;
-  }
-  .signal-visual{
-    position: relative;
-    height: 320px;
-    border: 1px solid var(--line);
-    background: var(--surface);
-    overflow:hidden;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .signal-visual svg{ width:100%; height:100%; }
-  .about-stats{
-    display:grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 36px;
-  }
-  .stat-num{
-    font-family: var(--font-display);
-    font-size: 34px; color: var(--green);
-  }
-  .stat-label{
-    font-size: 11px; letter-spacing:1.5px; text-transform:uppercase; color: var(--bone-dim); margin-top:6px;
-  }
-
-  @media (max-width: 860px){
-    .signal-section{ grid-template-columns: 1fr; gap: 40px; }
-  }
-
-  /* ---------- footer / tune in ---------- */
-  footer{
-    border-top: 1px solid var(--line);
-    padding: 70px 32px 36px;
-  }
-  .footer-grid{
-    max-width: 1180px; margin: 0 auto;
-    display:grid; grid-template-columns: 1.4fr 1fr 1fr;
-    gap: 50px;
-    margin-bottom: 60px;
-  }
-  .footer-brand .logo{ margin-bottom: 16px; }
-  .footer-brand p{ font-size:13px; color: var(--bone-dim); line-height:1.8; max-width: 38ch; }
-  .footer-col h4{
-    font-size: 11px; letter-spacing:2px; text-transform:uppercase; color: var(--bone-dim); margin-bottom:18px;
-  }
-  .footer-col a{
-    display:block; color: var(--bone); text-decoration:none; font-size:13px; margin-bottom: 12px;
-    transition: color 0.2s;
-  }
-  .footer-col a:hover{ color: var(--green); }
-
-  .footer-bottom{
-    max-width:1180px; margin:0 auto;
-    display:flex; justify-content:space-between; align-items:center;
-    border-top: 1px solid var(--line);
-    padding-top: 24px;
-    font-size: 11px; color: var(--bone-dim); letter-spacing: 0.5px;
-    flex-wrap: wrap; gap:12px;
-  }
-
-  @media (max-width: 760px){
-    .footer-grid{ grid-template-columns: 1fr; gap: 36px; }
-  }
+@keyframes pulse{
+  0%,100%{opacity:1; transform:scale(1);}
+  50%{opacity:.3; transform:scale(0.7);}
+}
 </style>
 </head>
+
 <body>
 
-<div class="noise"></div>
-<div class="scanline"></div>
+<div class="container">
+  <h1>GLITCH CHANNEL</h1>
 
-<header>
-  <div class="logo"><span class="dot"></span>GLITCH RADIO</div>
-  <nav>
-    <a href="#programacion">Programación</a>
-    <a href="#frecuencias">Frecuencias</a>
-    <a href="#senal">La señal</a>
-    <a href="#contacto">Contacto</a>
-  </nav>
-  <div class="live-tag"><span class="rec"></span>EN VIVO</div>
-</header>
+  <div class="live"><span class="dot"></span>LIVE SIGNAL</div>
 
-<section class="hero">
-  <div class="freq-readout" id="freqReadout"><span class="num-wrap">88.6</span><span class="mhz">MHz</span></div>
-  <h1 class="tagline">Radio que <span>no se sintoniza</span>, se intercepta.</h1>
-  <p class="hero-sub">Transmisión online sin parrilla fija ni filtros de algoritmo. Música, voces y ruido tal y como llegan a la antena — interferencias incluidas.</p>
+  <audio id="radio" preload="none">
+    <source src="https://stream.laut.fm/glitch" type="audio/mpeg">
+  </audio>
 
-  <div class="hero-controls">
-    <button class="play-btn" id="playBtn" aria-label="Reproducir señal en directo">
-      <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      Escuchar en directo
-    </button>
-    <div class="now-playing">
-      <span class="label">SONANDO AHORA</span>
-      <span class="track">Turno de noche — Mix sin anunciar</span>
-    </div>
-    <div class="wave" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
+  <div>
+    <button id="btn">PLAY</button>
   </div>
 
-  <div class="dial-strip" aria-hidden="true">
-    <div class="dial-track" id="dialTrack"></div>
-  </div>
-</section>
-
-<section id="programacion">
-  <div class="eyebrow">Parrilla de hoy</div>
-  <h2>Lo que suena, hora a hora.</h2>
-  <p class="section-intro">Nada de repeticiones eternas. Cada franja la lleva alguien distinto, y nadie sabe del todo qué va a pasar a continuación.</p>
-
-  <div class="schedule-list">
-    <div class="show-row">
-      <span class="show-time">06:00</span>
-      <div>
-        <div class="show-name">Estática de Madrugada</div>
-        <div class="show-host">Selección instrumental, sin presentador</div>
-      </div>
-      <span class="show-host">Ambient / Drone</span>
-      <span class="show-tag">Auto</span>
-    </div>
-    <div class="show-row">
-      <span class="show-time">10:00</span>
-      <div>
-        <div class="show-name">Frecuencia Abierta</div>
-        <div class="show-host">con Nadia Ortells</div>
-      </div>
-      <span class="show-host">Entrevistas + directo</span>
-      <span class="show-tag">Live</span>
-    </div>
-    <div class="show-row on-air">
-      <span class="show-time">22:00</span>
-      <div>
-        <div class="show-name">Turno de Noche</div>
-        <div class="show-host">con DJ Voltio</div>
-      </div>
-      <span class="show-host">Electrónica / Glitch / IDM</span>
-      <span class="show-tag">On air</span>
-    </div>
-    <div class="show-row">
-      <span class="show-time">00:30</span>
-      <div>
-        <div class="show-name">Señal Perdida</div>
-        <div class="show-host">Archivo rotativo de oyentes</div>
-      </div>
-      <span class="show-host">Mezcla comunitaria</span>
-      <span class="show-tag">Auto</span>
-    </div>
-    <div class="show-row">
-      <span class="show-time">03:00</span>
-      <div>
-        <div class="show-name">Ruido de Fondo</div>
-        <div class="show-host">con Mateo Crinch</div>
-      </div>
-      <span class="show-host">Experimental / Noise</span>
-      <span class="show-tag">Live</span>
-    </div>
-  </div>
-</section>
-
-<section id="frecuencias">
-  <div class="eyebrow">Sintoniza por género</div>
-  <h2>Tres frecuencias, un mismo dial.</h2>
-  <p class="section-intro">Glitch Radio no tiene un único sonido. Elige por dónde entrar.</p>
-
-  <div class="freq-grid">
-    <div class="freq-card">
-      <div class="freq-num">88.6 — A</div>
-      <h3>Pulso</h3>
-      <p>Electrónica de baile, breakbeat e IDM. Lo que mueve el cuerpo antes que la cabeza.</p>
-    </div>
-    <div class="freq-card">
-      <div class="freq-num">91.2 — B</div>
-      <h3>Deriva</h3>
-      <p>Ambient, drone y paisajes sonoros largos. Para cuando el silencio necesita compañía.</p>
-    </div>
-    <div class="freq-card">
-      <div class="freq-num">95.4 — C</div>
-      <h3>Voz Cruda</h3>
-      <p>Entrevistas, radio-ensayo y piezas habladas grabadas sin pulir de más.</p>
-    </div>
-    <div class="freq-card">
-      <div class="freq-num">98.0 — D</div>
-      <h3>Archivo</h3>
-      <p>Sesiones pasadas, programas antiguos y rarezas que solo viven aquí.</p>
-    </div>
-    <div class="freq-card">
-      <div class="freq-num">101.7 — E</div>
-      <h3>Comunidad</h3>
-      <p>Mezclas enviadas por quien escucha. Cualquiera puede acabar sonando aquí.</p>
-    </div>
-    <div class="freq-card">
-      <div class="freq-num">104.3 — F</div>
-      <h3>Ruido</h3>
-      <p>Noise, industrial y todo lo que normalmente se queda fuera del dial.</p>
-    </div>
-  </div>
-</section>
-
-<section id="senal">
-  <div class="signal-section">
-    <div>
-      <div class="eyebrow">La señal</div>
-      <h2>Sin parrilla cerrada, sin algoritmo de por medio.</h2>
-      <p class="section-intro" style="margin-bottom:0;">
-        Glitch Radio emite desde un estudio pequeño con un principio simple: lo que suena lo decide una persona, no una lista automática. Habrá cortes, silencios y algún error de transmisión — forma parte del directo, no lo escondemos.
-      </p>
-      <div class="about-stats">
-        <div>
-          <div class="stat-num">24/7</div>
-          <div class="stat-label">Emisión continua</div>
-        </div>
-        <div>
-          <div class="stat-num">6</div>
-          <div class="stat-label">Frecuencias temáticas</div>
-        </div>
-        <div>
-          <div class="stat-num">+40</div>
-          <div class="stat-label">Voces rotando al mes</div>
-        </div>
-        <div>
-          <div class="stat-num">0</div>
-          <div class="stat-label">Anuncios en directo</div>
-        </div>
-      </div>
-    </div>
-    <div class="signal-visual">
-      <svg viewBox="0 0 400 200" id="waveSvg" preserveAspectRatio="none">
-        <line x1="0" y1="100" x2="400" y2="100" stroke="#2C2C32" stroke-width="1"/>
-        <polyline id="livePoly" fill="none" stroke="#39FF6A" stroke-width="2" points=""/>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<footer id="contacto">
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <div class="logo"><span class="dot"></span>GLITCH RADIO</div>
-      <p>Una señal que se construye en directo, hora a hora, con quien quiera ponerle voz. Sintoniza cuando quieras — siempre hay algo sonando.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Emisora</h4>
-      <a href="#programacion">Programación</a>
-      <a href="#frecuencias">Frecuencias</a>
-      <a href="#senal">La señal</a>
-    </div>
-    <div class="footer-col">
-      <h4>Participa</h4>
-      <a href="#">Envía tu mezcla</a>
-      <a href="#">Propón un programa</a>
-      <a href="mailto:hola@glitchradio.fm">hola@glitchradio.fm</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Glitch Radio. Transmisión experimental.</span>
-    <span>88.6 MHz — Señal online, sin licencia FM.</span>
-  </div>
-</footer>
+  <div id="status">OFFLINE</div>
+</div>
 
 <script>
-  // --- Dial strip generator ---
-  const dialTrack = document.getElementById('dialTrack');
-  let dialHTML = '';
-  for(let f = 87.0; f <= 108.0; f += 0.2){
-    const val = f.toFixed(1);
-    const isStrong = Math.abs(f - 88.6) < 0.05 || Math.abs(f - 95.4) < 0.05 || Math.abs(f - 101.7) < 0.05;
-    dialHTML += `<span class="${isStrong ? 'tick-strong' : ''}">${val}</span>`;
-  }
-  dialTrack.innerHTML = dialHTML + dialHTML; // duplicate for seamless scroll
-  let dialPos = 0;
-  function scrollDial(){
-    dialPos -= 0.6;
-    if(Math.abs(dialPos) > dialTrack.scrollWidth/2){ dialPos = 0; }
-    dialTrack.style.transform = `translateX(${dialPos}px)`;
-    requestAnimationFrame(scrollDial);
-  }
-  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    requestAnimationFrame(scrollDial);
-  }
+const radio = document.getElementById("radio");
+const btn = document.getElementById("btn");
+const status = document.getElementById("status");
 
-  // --- Glitch trigger on frequency readout, randomly ---
-  const freqEl = document.getElementById('freqReadout');
-  function triggerGlitch(){
-    freqEl.classList.add('glitching');
-    setTimeout(() => freqEl.classList.remove('glitching'), 280);
-    const next = 2000 + Math.random() * 4000;
-    setTimeout(triggerGlitch, next);
-  }
-  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    setTimeout(triggerGlitch, 2500);
-  }
+let playing = false;
 
-  // --- Play button toggle (visual only, no real audio stream) ---
-  const playBtn = document.getElementById('playBtn');
-  const playIcon = document.getElementById('playIcon');
-  let playing = false;
-  playBtn.addEventListener('click', () => {
-    playing = !playing;
-    if(playing){
-      playIcon.innerHTML = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
-      playBtn.lastChild.previousSibling ? null : null;
-      playBtn.childNodes[playBtn.childNodes.length-1].textContent = ' Pausar';
+btn.addEventListener("click", async () => {
+  try {
+    if (!playing) {
+      await radio.play();
+      btn.textContent = "PAUSE";
+      status.textContent = "CONNECTING...";
     } else {
-      playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
-      playBtn.childNodes[playBtn.childNodes.length-1].textContent = ' Escuchar en directo';
+      radio.pause();
+      btn.textContent = "PLAY";
+      status.textContent = "OFFLINE";
     }
-  });
+    playing = !playing;
+  } catch (e) {
+    status.textContent = "STREAM ERROR";
+  }
+});
 
-  // --- Live waveform SVG ---
-  const poly = document.getElementById('livePoly');
-  let t = 0;
-  function drawWave(){
-    let points = [];
-    for(let x = 0; x <= 400; x += 8){
-      const y = 100 + Math.sin(x*0.04 + t) * 28 * Math.sin(t*0.6 + x*0.01) + (Math.random()-0.5) * 6;
-      points.push(`${x},${y.toFixed(1)}`);
-    }
-    poly.setAttribute('points', points.join(' '));
-    t += 0.06;
-    requestAnimationFrame(drawWave);
-  }
-  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    requestAnimationFrame(drawWave);
-  } else {
-    poly.setAttribute('points', '0,100 400,100');
-  }
+radio.addEventListener("playing", () => {
+  status.textContent = "GLITCH RADIO — LIVE";
+});
+
+radio.addEventListener("waiting", () => {
+  status.textContent = "BUFFERING...";
+});
+
+radio.addEventListener("error", () => {
+  status.textContent = "CONNECTION LOST — RETRYING";
+  setTimeout(() => {
+    radio.load();
+  }, 3000);
+});
 </script>
 
 </body>
