@@ -2,194 +2,535 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GLITCH CHANNEL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Glitch Channel — radio en directo, sin pausas, sin guión.">
+<meta name="color-scheme" content="dark">
+<title>Glitch Channel — En directo</title>
 
 <style>
-:root{
-  --bg:#0a0a0c;
-  --green:#39FF6A;
-  --dim:#8a8a8a;
-  --line:#1f1f24;
-}
+  :root{
+    --bg: #08080a;
+    --panel: #111114;
+    --line: #232327;
+    --line-soft: #1a1a1d;
+    --green: #39FF6A;
+    --green-dim: #1f8f43;
+    --red: #ff3b3b;
+    --text: #f5f5f5;
+    --muted: #8a8a92;
 
-body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:var(--bg);
-  color:white;
-  font-family: monospace;
-  overflow:hidden;
-}
+    --font-display: "Space Grotesk", "Helvetica Neue", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
 
-/* ruido leve */
-body::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity:0.06;
-  pointer-events:none;
-}
+    --radius: 4px;
+    --ease: cubic-bezier(.2,.8,.2,1);
+  }
 
-.container{
-  text-align:center;
-  z-index:2;
-}
+  *{ margin:0; padding:0; box-sizing:border-box; }
 
-/* título glitch */
-h1{
-  font-size:44px;
-  letter-spacing:3px;
-  margin-bottom:10px;
-  position:relative;
-}
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  }
 
-h1::before,
-h1::after{
-  content:"GLITCH CHANNEL";
-  position:absolute;
-  left:0;
-  width:100%;
-  overflow:hidden;
-}
+  html, body{ height:100%; }
 
-h1::before{
-  color:var(--green);
-  top:-2px;
-  animation:glitch1 2s infinite linear alternate;
-}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-display);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    overflow-x:hidden;
+    position:relative;
+    padding:24px;
+  }
 
-h1::after{
-  color:#ff2e88;
-  top:2px;
-  animation:glitch2 2s infinite linear alternate;
-}
+  /* film grain + scanlines, signature texture */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:repeating-linear-gradient(
+      0deg, transparent, transparent 2px, rgba(255,255,255,.018) 3px
+    );
+    pointer-events:none;
+    z-index:1;
+  }
 
-@keyframes glitch1{
-  0%{transform:translate(0);}
-  20%{transform:translate(-2px,1px);}
-  40%{transform:translate(2px,-1px);}
-  60%{transform:translate(-1px,0);}
-  100%{transform:translate(0);}
-}
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:radial-gradient(ellipse at 50% 0%, rgba(57,255,106,.06), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
 
-@keyframes glitch2{
-  0%{transform:translate(0);}
-  25%{transform:translate(2px,0);}
-  50%{transform:translate(-2px,1px);}
-  100%{transform:translate(0);}
-}
+  a{ color:inherit; text-decoration:none; }
 
-/* botón */
-button{
-  margin-top:25px;
-  background:transparent;
-  border:1px solid var(--green);
-  color:var(--green);
-  padding:14px 26px;
-  cursor:pointer;
-  letter-spacing:2px;
-  transition:.2s;
-}
+  button{ font-family:inherit; }
 
-button:hover{
-  background:var(--green);
-  color:black;
-}
+  /* visible focus for keyboard users */
+  a:focus-visible,
+  button:focus-visible{
+    outline:2px solid var(--green);
+    outline-offset:3px;
+  }
 
-/* estado */
-#status{
-  margin-top:18px;
-  color:var(--dim);
-  font-size:13px;
-}
+  /* ---------- sponsors ---------- */
+  .sponsors{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:36px;
+    z-index:2;
+  }
 
-/* live dot */
-.live{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  margin-top:20px;
-  color:var(--green);
-  font-size:12px;
-  letter-spacing:2px;
-}
+  .sponsors a{
+    width:120px;
+    height:58px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:10px 14px;
+    opacity:.82;
+    transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
+  }
 
-.dot{
-  width:6px;
-  height:6px;
-  background:var(--green);
-  border-radius:50%;
-  animation:pulse 1s infinite;
-}
+  .sponsors a:hover,
+  .sponsors a:focus-visible{
+    transform:translateY(-3px);
+    border-color:var(--green-dim);
+    box-shadow:0 0 24px rgba(57,255,106,.18);
+    opacity:1;
+  }
 
-@keyframes pulse{
-  0%,100%{opacity:1; transform:scale(1);}
-  50%{opacity:.3; transform:scale(0.7);}
-}
+  .sponsors img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+  }
+
+  /* ---------- player ---------- */
+  .player{
+    width:min(92vw, 520px);
+    padding:56px 48px;
+    background:linear-gradient(180deg, rgba(255,255,255,.025), transparent 60%);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    text-align:center;
+    position:relative;
+    z-index:2;
+  }
+
+  /* corner ticks — signature detail, reads as a broadcast monitor frame */
+  .player::before,
+  .player::after{
+    content:"";
+    position:absolute;
+    width:14px;
+    height:14px;
+    border:1px solid var(--green-dim);
+  }
+  .player::before{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
+  .player::after{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+
+  .logo{
+    font-size:clamp(38px, 8vw, 54px);
+    font-weight:700;
+    letter-spacing:.08em;
+    position:relative;
+    display:inline-block;
+  }
+
+  /* glitch happens only on::before/::after duplicate layers, base text stays readable */
+  .logo span{
+    position:relative;
+    display:inline-block;
+  }
+
+  .logo.is-glitching span::before,
+  .logo.is-glitching span::after{
+    content:attr(data-text);
+    position:absolute;
+    left:0; top:0;
+    width:100%;
+    overflow:hidden;
+  }
+  .logo.is-glitching span::before{
+    color:var(--green);
+    clip-path:inset(0 0 60% 0);
+    transform:translate(-2px,-1px);
+  }
+  .logo.is-glitching span::after{
+    color:var(--red);
+    clip-path:inset(40% 0 0 0);
+    transform:translate(2px,1px);
+  }
+
+  .sub{
+    margin-top:8px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.4em;
+    color:var(--muted);
+  }
+
+  .live{
+    margin-top:30px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.2em;
+    color:var(--green);
+  }
+
+  .dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--green);
+    animation:pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse{
+    0%, 100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:.35; transform:scale(.7); }
+  }
+
+  /* ---------- controls ---------- */
+  .controls{
+    margin-top:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+  }
+
+  #play{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    background:transparent;
+    border:1px solid var(--green);
+    color:var(--green);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .2s var(--ease), color .2s var(--ease), transform .15s var(--ease);
+    flex-shrink:0;
+  }
+
+  #play:hover{ background:var(--green); color:#000; }
+  #play:active{ transform:scale(.94); }
+
+  #play svg{ width:20px; height:20px; }
+
+  .volume{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:1;
+    max-width:160px;
+  }
+
+  .volume svg{ width:16px; height:16px; color:var(--muted); flex-shrink:0; }
+
+  #volume{
+    -webkit-appearance:none;
+    appearance:none;
+    width:100%;
+    height:2px;
+    background:var(--line);
+    border-radius:2px;
+    cursor:pointer;
+  }
+
+  #volume::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--green);
+    cursor:pointer;
+    transition:transform .15s var(--ease);
+  }
+  #volume::-webkit-slider-thumb:hover{ transform:scale(1.2); }
+  #volume::-moz-range-thumb{
+    width:12px; height:12px; border-radius:50%;
+    background:var(--green); border:none; cursor:pointer;
+  }
+
+  .status{
+    margin-top:20px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.1em;
+    color:var(--muted);
+    min-height:1.2em;
+    transition:color .2s var(--ease);
+  }
+
+  .status[data-state="on-air"]{ color:var(--green); }
+  .status[data-state="error"]{ color:var(--red); }
+
+  /* ---------- footer links ---------- */
+  .links{
+    margin-top:44px;
+    display:flex;
+    justify-content:center;
+    gap:16px;
+  }
+
+  .links a{
+    width:96px;
+    height:64px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:12px 16px;
+    opacity:.82;
+    transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
+  }
+
+  .links a:hover,
+  .links a:focus-visible{
+    transform:translateY(-3px);
+    border-color:var(--green-dim);
+    box-shadow:0 0 24px rgba(57,255,106,.18);
+    opacity:1;
+  }
+
+  .links img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+  }
+
+  /* openstream serves a small favicon — force it up so it doesn't float tiny in its card */
+  .link-openstream img{
+    width:36px;
+    height:36px;
+    image-rendering:-webkit-optimize-contrast;
+  }
+
+  .footer{
+    margin-top:34px;
+    font-family:var(--font-mono);
+    font-size:10px;
+    letter-spacing:.05em;
+    color:#555;
+  }
+
+  /* sr-only utility for accessible labels without visual clutter */
+  .sr-only{
+    position:absolute;
+    width:1px; height:1px;
+    padding:0; margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0;
+  }
+
+  @media (max-width:560px){
+    .player{ padding:40px 28px; }
+    .links a{ width:80px; height:54px; }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>GLITCH CHANNEL</h1>
+<nav class="sponsors" aria-label="Patrocinadores">
+  <a href="https://www.shopify.com" target="_blank" rel="noopener noreferrer">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg" alt="Shopify" loading="lazy">
+  </a>
+  <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube" loading="lazy">
+  </a>
+  <a href="https://www.phonostar.de" target="_blank" rel="noopener noreferrer">
+    <img src="https://www.phonostar.de/favicon.ico" alt="phonostar.de" loading="lazy">
+  </a>
+</nav>
 
-  <div class="live"><span class="dot"></span>LIVE SIGNAL</div>
+<main class="player">
+
+  <h1 class="logo" id="logo">
+    <span data-text="GLITCH">GLITCH</span>
+  </h1>
+  <p class="sub">CHANNEL</p>
+
+  <p class="live"><span class="dot" aria-hidden="true"></span> LIVE STREAM</p>
 
   <audio id="radio" preload="none">
     <source src="https://stream.laut.fm/glitch" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
   </audio>
 
-  <div>
-    <button id="btn">PLAY</button>
+  <div class="controls">
+    <button id="play" type="button" aria-pressed="false" aria-label="Reproducir">
+      <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M8 5v14l11-7z"/>
+      </svg>
+      <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none">
+        <path d="M6 5h4v14H6zM14 5h4v14h-4z"/>
+      </svg>
+    </button>
+
+    <div class="volume">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.48 4.48 0 0 0 16.5 12z"/>
+      </svg>
+      <label for="volume" class="sr-only">Volumen</label>
+      <input type="range" id="volume" min="0" max="100" value="80">
+    </div>
   </div>
 
-  <div id="status">OFFLINE</div>
-</div>
+  <p class="status" id="status" data-state="offline" role="status" aria-live="polite">OFFLINE</p>
+
+  <nav class="links" aria-label="Enlaces">
+    <a href="https://paypal.me/glitchchannel" target="_blank" rel="noopener noreferrer" aria-label="Apoya el canal en PayPal">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="" loading="lazy">
+    </a>
+    <a href="https://www.facebook.com/glitchrtv" target="_blank" rel="noopener noreferrer" aria-label="Síguenos en Facebook">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="" loading="lazy">
+    </a>
+    <a href="https://listen.openstream.co/7499" target="_blank" rel="noopener noreferrer" aria-label="Escuchar en Openstream" class="link-openstream">
+      <img src="https://listen.openstream.co/favicon.ico" alt="" loading="lazy">
+    </a>
+  </nav>
+
+  <p class="footer">GLITCH CHANNEL © 2026</p>
+
+</main>
 
 <script>
-const radio = document.getElementById("radio");
-const btn = document.getElementById("btn");
-const status = document.getElementById("status");
+(() => {
+  const radio = document.getElementById('radio');
+  const playBtn = document.getElementById('play');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const status = document.getElementById('status');
+  const volumeSlider = document.getElementById('volume');
+  const logo = document.getElementById('logo');
 
-let playing = false;
+  radio.volume = volumeSlider.value / 100;
 
-btn.addEventListener("click", async () => {
-  try {
-    if (!playing) {
-      await radio.play();
-      btn.textContent = "PAUSE";
-      status.textContent = "CONNECTING...";
-    } else {
-      radio.pause();
-      btn.textContent = "PLAY";
-      status.textContent = "OFFLINE";
-    }
-    playing = !playing;
-  } catch (e) {
-    status.textContent = "STREAM ERROR";
+  let userWantsPlay = false;
+  let retryCount = 0;
+  let retryTimer = null;
+  const MAX_RETRY_DELAY = 30000;
+
+  function setStatus(text, state){
+    status.textContent = text;
+    status.dataset.state = state;
   }
-});
 
-radio.addEventListener("playing", () => {
-  status.textContent = "GLITCH RADIO — LIVE";
-});
+  function showPauseIcon(show){
+    playIcon.style.display = show ? 'none' : 'block';
+    pauseIcon.style.display = show ? 'block' : 'none';
+    playBtn.setAttribute('aria-label', show ? 'Pausar' : 'Reproducir');
+    playBtn.setAttribute('aria-pressed', show ? 'true' : 'false');
+  }
 
-radio.addEventListener("waiting", () => {
-  status.textContent = "BUFFERING...";
-});
+  function clearRetry(){
+    if (retryTimer){ clearTimeout(retryTimer); retryTimer = null; }
+  }
 
-radio.addEventListener("error", () => {
-  status.textContent = "CONNECTION LOST — RETRYING";
-  setTimeout(() => {
-    radio.load();
-  }, 3000);
-});
+  function scheduleRetry(){
+    clearRetry();
+    if (!userWantsPlay) return;
+    const delay = Math.min(1000 * (2 ** retryCount), MAX_RETRY_DELAY);
+    retryCount++;
+    setStatus(`RECONNECTING IN ${Math.round(delay/1000)}S...`, 'error');
+    retryTimer = setTimeout(() => {
+      if (!userWantsPlay) return;
+      radio.load();
+      attemptPlay();
+    }, delay);
+  }
+
+  async function attemptPlay(){
+    try{
+      setStatus('CONNECTING...', 'offline');
+      await radio.play();
+    } catch(err){
+      setStatus('STREAM ERROR — TAP TO RETRY', 'error');
+      showPauseIcon(false);
+      userWantsPlay = false;
+    }
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (!userWantsPlay){
+      userWantsPlay = true;
+      retryCount = 0;
+      showPauseIcon(true);
+      attemptPlay();
+    } else {
+      userWantsPlay = false;
+      clearRetry();
+      radio.pause();
+      showPauseIcon(false);
+      setStatus('OFFLINE', 'offline');
+    }
+  });
+
+  volumeSlider.addEventListener('input', () => {
+    radio.volume = volumeSlider.value / 100;
+  });
+
+  radio.addEventListener('playing', () => {
+    retryCount = 0;
+    clearRetry();
+    setStatus('ON AIR', 'on-air');
+    showPauseIcon(true);
+  });
+
+  radio.addEventListener('waiting', () => {
+    setStatus('BUFFERING...', 'offline');
+  });
+
+  radio.addEventListener('pause', () => {
+    if (userWantsPlay) return; // pause caused by buffering, not user
+  });
+
+  radio.addEventListener('error', () => {
+    if (userWantsPlay) scheduleRetry();
+    else setStatus('OFFLINE', 'offline');
+  });
+
+  radio.addEventListener('stalled', () => {
+    if (userWantsPlay) scheduleRetry();
+  });
+
+  // periodic glitch flicker on the logo — small, restrained, on-brand
+  function triggerGlitch(){
+    logo.classList.add('is-glitching');
+    setTimeout(() => logo.classList.remove('is-glitching'), 180);
+  }
+  function scheduleGlitch(){
+    const delay = 3000 + Math.random() * 5000;
+    setTimeout(() => { triggerGlitch(); scheduleGlitch(); }, delay);
+  }
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    scheduleGlitch();
+  }
+})();
 </script>
 
 </body>
