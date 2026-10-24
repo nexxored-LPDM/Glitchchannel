@@ -1,18 +1,40 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Glitch Channel — radio en directo, sin pausas, sin guión.">
 <meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08080a">
 <title>Glitch Channel — En directo</title>
+
+<!-- Vista previa al compartir (WhatsApp, Facebook, X, Telegram).
+     IMPORTANTE: cuando publiques la página, cambia og:image y og:url por las direcciones absolutas reales. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Glitch Channel">
+<meta property="og:title" content="Glitch Channel — Radio en directo">
+<meta property="og:description" content="Radio en directo, sin pausas, sin guión.">
+<meta property="og:locale" content="es_ES">
+<meta property="og:image" content="og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Glitch Channel — Radio en directo">
+<meta name="twitter:description" content="Radio en directo, sin pausas, sin guión.">
+<meta name="twitter:image" content="og-image.png">
+
+<!-- Favicon propio (SVG incrustado, no depende de ningún archivo) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2308080a'/%3E%3Cpath d='M8 8h14M8 8v14M56 56H42M56 56V42' stroke='%231f8f43' stroke-width='3' fill='none'/%3E%3Ctext x='32' y='45' font-family='Helvetica,Arial,sans-serif' font-size='38' font-weight='700' text-anchor='middle' fill='%2339FF6A'%3EG%3C/text%3E%3Ctext x='34' y='46' font-family='Helvetica,Arial,sans-serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23ff3b3b' opacity='.55'%3EG%3C/text%3E%3C/svg%3E">
+
+<!-- Tipografías -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap">
 
 <style>
   :root{
     --bg: #08080a;
     --panel: #111114;
     --line: #232327;
-    --line-soft: #1a1a1d;
     --green: #39FF6A;
     --green-dim: #1f8f43;
     --red: #ff3b3b;
@@ -32,13 +54,14 @@
     *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
   }
 
-  html, body{ height:100%; }
+  html, body{ min-height:100%; }
 
   body{
     background:var(--bg);
     color:var(--text);
     font-family:var(--font-display);
     min-height:100vh;
+    min-height:100dvh;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -48,14 +71,12 @@
     padding:24px;
   }
 
-  /* film grain + scanlines, signature texture */
+  /* scanlines */
   body::before{
     content:"";
     position:fixed;
     inset:0;
-    background:repeating-linear-gradient(
-      0deg, transparent, transparent 2px, rgba(255,255,255,.018) 3px
-    );
+    background:repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,.018) 3px);
     pointer-events:none;
     z-index:1;
   }
@@ -64,18 +85,17 @@
     content:"";
     position:fixed;
     inset:0;
-    background:radial-gradient(ellipse at 50% 0%, rgba(57,255,106,.06), transparent 60%);
+    background:radial-gradient(ellipse at 50% 0%, rgba(57,255,106,.07), transparent 60%);
     pointer-events:none;
     z-index:0;
   }
 
   a{ color:inherit; text-decoration:none; }
-
   button{ font-family:inherit; }
 
-  /* visible focus for keyboard users */
   a:focus-visible,
-  button:focus-visible{
+  button:focus-visible,
+  input:focus-visible{
     outline:2px solid var(--green);
     outline-offset:3px;
   }
@@ -85,6 +105,7 @@
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
+    align-items:stretch;
     gap:14px;
     margin-bottom:36px;
     z-index:2;
@@ -100,7 +121,7 @@
     border:1px solid var(--line);
     border-radius:var(--radius);
     padding:10px 14px;
-    opacity:.82;
+    opacity:.85;
     transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
   }
 
@@ -112,11 +133,68 @@
     opacity:1;
   }
 
-  .sponsors img{
+  .sponsors img,
+  .sponsors svg{
     max-width:100%;
     max-height:100%;
     object-fit:contain;
   }
+
+  /* logotipos de texto incrustados (sin imágenes externas) */
+  .wordmark{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:-.02em;
+    line-height:1;
+    white-space:nowrap;
+  }
+  .wm-shopify{ color:#5a863e; }
+  .wm-phonostar{ color:#e2001a; font-size:18px; }
+  .wm-paypal{ font-size:20px; font-style:italic; }
+  .wm-paypal b{ color:#003087; }
+  .wm-paypal b + b{ color:#009cde; }
+  .wm-openstream{ color:#111; font-size:14px; letter-spacing:-.01em; }
+  .wm-openstream b{ color:#e8710a; }
+
+  .links svg{ width:34px; height:34px; }
+
+  /* pestaña "Auspicia aquí" */
+  .sponsors a.sponsor-cta{
+    background:transparent;
+    border:1px dashed var(--green);
+    color:var(--green);
+    flex-direction:column;
+    gap:3px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    text-align:center;
+    line-height:1.2;
+    opacity:1;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .sponsors a.sponsor-cta small{
+    font-size:9px;
+    font-weight:400;
+    letter-spacing:.12em;
+    color:var(--muted);
+    transition:color .2s var(--ease);
+  }
+
+  .sponsors a.sponsor-cta:hover,
+  .sponsors a.sponsor-cta:focus-visible{
+    background:var(--green);
+    color:#000;
+    border-style:solid;
+    box-shadow:0 0 28px rgba(57,255,106,.35);
+  }
+  .sponsors a.sponsor-cta:hover small,
+  .sponsors a.sponsor-cta:focus-visible small{ color:#0a3d1a; }
 
   /* ---------- player ---------- */
   .player{
@@ -130,7 +208,7 @@
     z-index:2;
   }
 
-  /* corner ticks — signature detail, reads as a broadcast monitor frame */
+  /* corner ticks */
   .player::before,
   .player::after{
     content:"";
@@ -150,11 +228,7 @@
     display:inline-block;
   }
 
-  /* glitch happens only on::before/::after duplicate layers, base text stays readable */
-  .logo span{
-    position:relative;
-    display:inline-block;
-  }
+  .logo span{ position:relative; display:inline-block; }
 
   .logo.is-glitching span::before,
   .logo.is-glitching span::after{
@@ -207,9 +281,42 @@
     50%{ opacity:.35; transform:scale(.7); }
   }
 
+  /* ---------- equalizer (solo activo en directo) ---------- */
+  .eq{
+    margin:26px auto 0;
+    height:22px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    gap:4px;
+  }
+  .eq i{
+    display:block;
+    width:3px;
+    height:4px;
+    background:var(--green-dim);
+    border-radius:1px;
+    transition:background .2s var(--ease);
+  }
+  .player.is-playing .eq i{
+    background:var(--green);
+    animation:eq 1s ease-in-out infinite;
+  }
+  .eq i:nth-child(2){ animation-delay:-.2s !important; }
+  .eq i:nth-child(3){ animation-delay:-.5s !important; }
+  .eq i:nth-child(4){ animation-delay:-.1s !important; }
+  .eq i:nth-child(5){ animation-delay:-.7s !important; }
+  .eq i:nth-child(6){ animation-delay:-.35s !important; }
+  .eq i:nth-child(7){ animation-delay:-.6s !important; }
+
+  @keyframes eq{
+    0%, 100%{ height:4px; }
+    50%{ height:22px; }
+  }
+
   /* ---------- controls ---------- */
   .controls{
-    margin-top:36px;
+    margin-top:30px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -227,13 +334,12 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    transition:background .2s var(--ease), color .2s var(--ease), transform .15s var(--ease);
+    transition:background .2s var(--ease), color .2s var(--ease), transform .15s var(--ease), box-shadow .2s var(--ease);
     flex-shrink:0;
   }
 
-  #play:hover{ background:var(--green); color:#000; }
+  #play:hover{ background:var(--green); color:#000; box-shadow:0 0 28px rgba(57,255,106,.3); }
   #play:active{ transform:scale(.94); }
-
   #play svg{ width:20px; height:20px; }
 
   .volume{
@@ -244,7 +350,18 @@
     max-width:160px;
   }
 
-  .volume svg{ width:16px; height:16px; color:var(--muted); flex-shrink:0; }
+  #mute{
+    background:none;
+    border:none;
+    color:var(--muted);
+    cursor:pointer;
+    display:flex;
+    padding:4px;
+    flex-shrink:0;
+    transition:color .2s var(--ease);
+  }
+  #mute:hover{ color:var(--green); }
+  #mute svg{ width:18px; height:18px; }
 
   #volume{
     -webkit-appearance:none;
@@ -265,7 +382,7 @@
     cursor:pointer;
     transition:transform .15s var(--ease);
   }
-  #volume::-webkit-slider-thumb:hover{ transform:scale(1.2); }
+  #volume::-webkit-slider-thumb:hover{ transform:scale(1.25); }
   #volume::-moz-range-thumb{
     width:12px; height:12px; border-radius:50%;
     background:var(--green); border:none; cursor:pointer;
@@ -302,7 +419,7 @@
     border:1px solid var(--line);
     border-radius:var(--radius);
     padding:12px 16px;
-    opacity:.82;
+    opacity:.85;
     transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
   }
 
@@ -320,22 +437,14 @@
     object-fit:contain;
   }
 
-  /* openstream serves a small favicon — force it up so it doesn't float tiny in its card */
-  .link-openstream img{
-    width:36px;
-    height:36px;
-    image-rendering:-webkit-optimize-contrast;
-  }
-
   .footer{
     margin-top:34px;
     font-family:var(--font-mono);
     font-size:10px;
     letter-spacing:.05em;
-    color:#555;
+    color:#6a6a72;
   }
 
-  /* sr-only utility for accessible labels without visual clutter */
   .sr-only{
     position:absolute;
     width:1px; height:1px;
@@ -347,8 +456,10 @@
   }
 
   @media (max-width:560px){
-    .player{ padding:40px 28px; }
-    .links a{ width:80px; height:54px; }
+    .player{ padding:40px 24px; }
+    .links{ flex-wrap:wrap; gap:12px; }
+    .links a{ width:calc(50% - 6px); max-width:130px; height:54px; }
+    .sponsors a{ width:calc(50% - 7px); max-width:150px; }
   }
 </style>
 </head>
@@ -356,18 +467,21 @@
 <body>
 
 <nav class="sponsors" aria-label="Patrocinadores">
-  <a href="https://www.shopify.com" target="_blank" rel="noopener noreferrer">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg" alt="Shopify" loading="lazy">
+  <a href="https://www.shopify.com" target="_blank" rel="noopener noreferrer" aria-label="Shopify">
+    <span class="wordmark wm-shopify">shopify</span>
   </a>
-  <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube" loading="lazy">
+
+  <a href="https://www.phonostar.de" target="_blank" rel="noopener noreferrer" aria-label="phonostar.de">
+    <span class="wordmark wm-phonostar">phonostar</span>
   </a>
-  <a href="https://www.phonostar.de" target="_blank" rel="noopener noreferrer">
-    <img src="https://www.phonostar.de/favicon.ico" alt="phonostar.de" loading="lazy">
+
+  <a class="sponsor-cta" href="https://glitch-sonic-ads.base44.app/" target="_blank" rel="noopener noreferrer" aria-label="Auspicia aquí: anuncia tu marca en Glitch Channel">
+    Auspicia aquí
+    <small>tu marca en el aire</small>
   </a>
 </nav>
 
-<main class="player">
+<main class="player" id="player">
 
   <h1 class="logo" id="logo">
     <span data-text="GLITCH">GLITCH</span>
@@ -376,8 +490,14 @@
 
   <p class="live"><span class="dot" aria-hidden="true"></span> LIVE STREAM</p>
 
+  <div class="eq" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </div>
+
   <audio id="radio" preload="none">
     <source src="https://stream.laut.fm/glitch" type="audio/mpeg">
+    <!-- respaldo: si laut.fm falla, el navegador pasa solo a Openstream -->
+    <source src="https://listen.openstream.co/7499/audio">
     Tu navegador no soporta audio HTML5.
   </audio>
 
@@ -392,9 +512,14 @@
     </button>
 
     <div class="volume">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.48 4.48 0 0 0 16.5 12z"/>
-      </svg>
+      <button id="mute" type="button" aria-label="Silenciar" aria-pressed="false">
+        <svg id="volOn" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.48 4.48 0 0 0 16.5 12z"/>
+        </svg>
+        <svg id="volOff" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:none">
+          <path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/>
+        </svg>
+      </button>
       <label for="volume" class="sr-only">Volumen</label>
       <input type="range" id="volume" min="0" max="100" value="80">
     </div>
@@ -403,14 +528,23 @@
   <p class="status" id="status" data-state="offline" role="status" aria-live="polite">OFFLINE</p>
 
   <nav class="links" aria-label="Enlaces">
-    <a href="https://paypal.me/glitchchannel" target="_blank" rel="noopener noreferrer" aria-label="Apoya el canal en PayPal">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="" loading="lazy">
+    <a href="https://www.youtube.com/@glitchchannelive" target="_blank" rel="noopener noreferrer" aria-label="Canal de YouTube de Glitch Channel">
+      <svg viewBox="0 0 159 110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f00" d="M154 17.5c-1.8-6.7-7-11.9-13.7-13.7C128.4 0 79.7 0 79.7 0S31 0 19.1 3.8C12.4 5.6 7.2 10.8 5.4 17.5 1.6 29.4 1.6 55 1.6 55s0 25.6 3.8 37.5c1.8 6.7 7 11.9 13.7 13.7C31 110 79.7 110 79.7 110s48.7 0 60.6-3.8c6.7-1.8 11.9-7 13.7-13.7 3.8-11.9 3.8-37.5 3.8-37.5s0-25.6-3.8-37.5z"/>
+        <path fill="#fff" d="M64 78.6 104.5 55 64 31.4z"/>
+      </svg>
     </a>
     <a href="https://www.facebook.com/glitchrtv" target="_blank" rel="noopener noreferrer" aria-label="Síguenos en Facebook">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="" loading="lazy">
+      <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="12" fill="#1877f2"/>
+        <path fill="#fff" d="M13.4 19v-6.3h2.1l.4-2.6h-2.5V8.5c0-.8.3-1.3 1.4-1.3h1.2V4.9c-.2 0-1-.1-1.9-.1-2 0-3.3 1.2-3.3 3.400v1.700H8.700v2.600h2.100V19z"/>
+      </svg>
     </a>
-    <a href="https://listen.openstream.co/7499" target="_blank" rel="noopener noreferrer" aria-label="Escuchar en Openstream" class="link-openstream">
-      <img src="https://listen.openstream.co/favicon.ico" alt="" loading="lazy">
+    <a href="https://paypal.me/glitchchannel" target="_blank" rel="noopener noreferrer" aria-label="Apoya el canal en PayPal">
+      <span class="wordmark wm-paypal"><b>Pay</b><b>Pal</b></span>
+    </a>
+    <a href="https://listen.openstream.co/7499" target="_blank" rel="noopener noreferrer" aria-label="Escuchar en Openstream">
+      <span class="wordmark wm-openstream"><b>open</b>stream</span>
     </a>
   </nav>
 
@@ -421,11 +555,15 @@
 <script>
 (() => {
   const radio = document.getElementById('radio');
+  const player = document.getElementById('player');
   const playBtn = document.getElementById('play');
   const playIcon = document.getElementById('playIcon');
   const pauseIcon = document.getElementById('pauseIcon');
   const status = document.getElementById('status');
   const volumeSlider = document.getElementById('volume');
+  const muteBtn = document.getElementById('mute');
+  const volOn = document.getElementById('volOn');
+  const volOff = document.getElementById('volOff');
   const logo = document.getElementById('logo');
 
   radio.volume = volumeSlider.value / 100;
@@ -452,12 +590,13 @@
   }
 
   function scheduleRetry(){
-    clearRetry();
-    if (!userWantsPlay) return;
+    if (!userWantsPlay || retryTimer) return;
+    player.classList.remove('is-playing');
     const delay = Math.min(1000 * (2 ** retryCount), MAX_RETRY_DELAY);
     retryCount++;
     setStatus(`RECONNECTING IN ${Math.round(delay/1000)}S...`, 'error');
     retryTimer = setTimeout(() => {
+      retryTimer = null;
       if (!userWantsPlay) return;
       radio.load();
       attemptPlay();
@@ -469,44 +608,67 @@
       setStatus('CONNECTING...', 'offline');
       await radio.play();
     } catch(err){
+      if (err && err.name === 'AbortError') return; // load() interrumpió el play, se reintenta solo
       setStatus('STREAM ERROR — TAP TO RETRY', 'error');
       showPauseIcon(false);
+      player.classList.remove('is-playing');
       userWantsPlay = false;
     }
   }
 
-  playBtn.addEventListener('click', () => {
+  function stopPlayback(){
+    userWantsPlay = false;
+    clearRetry();
+    radio.pause();
+    showPauseIcon(false);
+    player.classList.remove('is-playing');
+    setStatus('OFFLINE', 'offline');
+  }
+
+  function togglePlay(){
     if (!userWantsPlay){
       userWantsPlay = true;
       retryCount = 0;
       showPauseIcon(true);
       attemptPlay();
     } else {
-      userWantsPlay = false;
-      clearRetry();
-      radio.pause();
-      showPauseIcon(false);
-      setStatus('OFFLINE', 'offline');
+      stopPlayback();
     }
-  });
+  }
+
+  playBtn.addEventListener('click', togglePlay);
+
+  /* volumen y mute */
+  function syncMuteIcon(){
+    const muted = radio.muted || radio.volume === 0;
+    volOn.style.display = muted ? 'none' : 'block';
+    volOff.style.display = muted ? 'block' : 'none';
+    muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    muteBtn.setAttribute('aria-label', muted ? 'Activar sonido' : 'Silenciar');
+  }
 
   volumeSlider.addEventListener('input', () => {
     radio.volume = volumeSlider.value / 100;
+    if (radio.volume > 0) radio.muted = false;
+    syncMuteIcon();
   });
 
+  muteBtn.addEventListener('click', () => {
+    radio.muted = !radio.muted;
+    syncMuteIcon();
+  });
+
+  /* eventos del stream */
   radio.addEventListener('playing', () => {
     retryCount = 0;
     clearRetry();
     setStatus('ON AIR', 'on-air');
     showPauseIcon(true);
+    player.classList.add('is-playing');
   });
 
   radio.addEventListener('waiting', () => {
-    setStatus('BUFFERING...', 'offline');
-  });
-
-  radio.addEventListener('pause', () => {
-    if (userWantsPlay) return; // pause caused by buffering, not user
+    if (userWantsPlay) setStatus('BUFFERING...', 'offline');
   });
 
   radio.addEventListener('error', () => {
@@ -518,7 +680,40 @@
     if (userWantsPlay) scheduleRetry();
   });
 
-  // periodic glitch flicker on the logo — small, restrained, on-brand
+  radio.addEventListener('ended', () => {
+    if (userWantsPlay) scheduleRetry();
+  });
+
+  /* si el dispositivo recupera conexión, reconectar al instante */
+  window.addEventListener('online', () => {
+    if (userWantsPlay && retryTimer){
+      clearRetry();
+      retryCount = 0;
+      radio.load();
+      attemptPlay();
+    }
+  });
+
+  /* controles del sistema (pantalla de bloqueo, teclas multimedia) */
+  if ('mediaSession' in navigator){
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: 'En directo',
+      artist: 'Glitch Channel'
+    });
+    navigator.mediaSession.setActionHandler('play', () => { if (!userWantsPlay) togglePlay(); });
+    navigator.mediaSession.setActionHandler('pause', () => { if (userWantsPlay) stopPlayback(); });
+  }
+
+  /* barra espaciadora = play/pausa (si no hay foco en un control) */
+  document.addEventListener('keydown', (e) => {
+    if (e.code !== 'Space') return;
+    const tag = (document.activeElement || {}).tagName;
+    if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'A') return;
+    e.preventDefault();
+    togglePlay();
+  });
+
+  /* glitch periódico del logo */
   function triggerGlitch(){
     logo.classList.add('is-glitching');
     setTimeout(() => logo.classList.remove('is-glitching'), 180);
@@ -530,6 +725,8 @@
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
     scheduleGlitch();
   }
+
+  syncMuteIcon();
 })();
 </script>
 
