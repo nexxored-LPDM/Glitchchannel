@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -401,6 +402,34 @@
   .status[data-state="on-air"]{ color:var(--green); }
   .status[data-state="error"]{ color:var(--red); }
 
+  /* ---------- botón ofertas patrocinadas ---------- */
+  .offers{
+    margin-top:30px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:14px 26px;
+    background:var(--green);
+    color:#000;
+    border:1px solid var(--green);
+    border-radius:var(--radius);
+    font-family:var(--font-mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    transition:transform .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease), color .2s var(--ease);
+  }
+  .offers svg{ width:14px; height:14px; flex-shrink:0; }
+  .offers:hover,
+  .offers:focus-visible{
+    transform:translateY(-3px);
+    background:transparent;
+    color:var(--green);
+    box-shadow:0 0 28px rgba(57,255,106,.3);
+  }
+
   /* ---------- footer links ---------- */
   .links{
     margin-top:44px;
@@ -526,6 +555,12 @@
   </div>
 
   <p class="status" id="status" data-state="offline" role="status" aria-live="polite">OFFLINE</p>
+
+  <!-- Se abre en pestaña nueva: la página con la radio sigue abierta y el audio no se corta -->
+  <a class="offers" href="https://araplhn.org/4/8ef889958d5bcbf2b4fa9431a55bda52" target="_blank" rel="sponsored noopener" aria-label="Ofertas patrocinadas (se abre en una pestaña nueva)">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.6 11.4 12.6 3.4A2 2 0 0 0 11.2 3H5a2 2 0 0 0-2 2v6.2c0 .5.2 1 .6 1.4l8 8a2 2 0 0 0 2.8 0l6.2-6.2a2 2 0 0 0 0-2.8zM7.500 9a1.500 1.500 0 1 1 0-3 1.500 1.500 0 0 1 0 3z"/></svg>
+    Ofertas patrocinadas
+  </a>
 
   <nav class="links" aria-label="Enlaces">
     <a href="https://www.youtube.com/@glitchchannelive" target="_blank" rel="noopener noreferrer" aria-label="Canal de YouTube de Glitch Channel">
