@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -410,6 +411,174 @@
   .status[data-state="on-air"]{ color:var(--green); }
   .status[data-state="error"]{ color:var(--red); }
 
+  /* ---------- pantalla del reproductor: anuncio en stop motion cinematográfico ---------- */
+  .stage{
+    display:block;
+    position:relative;
+    aspect-ratio:16 / 9;
+    margin-top:26px;
+    background:#000;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .stage:hover,
+  .stage:focus-visible{
+    border-color:var(--green-dim);
+    box-shadow:0 0 28px rgba(57,255,106,.18);
+  }
+
+  .scene{
+    position:absolute;
+    inset:-4%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    will-change:transform;
+  }
+  .scene img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:contrast(1.12) saturate(.88) brightness(.95);
+  }
+
+  /* tarjetas tipográficas (se usan mientras no haya imágenes propias) */
+  .card{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:.2em;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(57,255,106,.16), transparent 62%),
+      linear-gradient(180deg, #0c0d0f, #050506);
+    font-family:var(--font-display);
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-size:clamp(18px, 5vw, 34px);
+    line-height:1.05;
+  }
+  .card .l1{ color:var(--text); text-shadow:2px 0 var(--red), -2px 0 rgba(57,255,106,.8); }
+  .card .l2{ color:var(--green); text-shadow:0 0 18px rgba(57,255,106,.45); }
+
+  /* barras de cine, viñeta y grano de película */
+  .bar{
+    position:absolute;
+    left:0; right:0;
+    height:12%;
+    background:#000;
+    z-index:3;
+    pointer-events:none;
+  }
+  .bar.top{ top:0; }
+  .bar.bottom{ bottom:0; }
+
+  .vignette{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.7) 100%);
+    z-index:2;
+    pointer-events:none;
+  }
+
+  .grain{
+    position:absolute;
+    inset:-20%;
+    z-index:2;
+    pointer-events:none;
+    opacity:.2;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain .5s steps(4) infinite;
+  }
+  @keyframes grain{
+    0%{ transform:translate(0,0); }
+    25%{ transform:translate(-3%,2%); }
+    50%{ transform:translate(2%,-3%); }
+    75%{ transform:translate(-2%,-1%); }
+    100%{ transform:translate(0,0); }
+  }
+
+  .stage-tag{
+    position:absolute;
+    top:calc(12% + 6px);
+    right:8px;
+    z-index:4;
+    font-family:var(--font-mono);
+    font-size:9px;
+    letter-spacing:.3em;
+    color:var(--muted);
+    background:rgba(8,8,10,.7);
+    padding:3px 6px;
+    border-radius:2px;
+  }
+
+  /* ---------- publicidad dentro del reproductor ---------- */
+  .ad{
+    margin-top:26px;
+    padding:12px 14px 14px;
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+    text-align:left;
+  }
+  .ad-label{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:9px;
+    letter-spacing:.3em;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+  .ad-network:empty{ display:none; }
+  .ad-network{ display:flex; justify-content:center; overflow:hidden; }
+
+  .ad-house{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    min-width:0;
+  }
+  .ad-house .txt{ min-width:0; display:flex; flex-direction:column; gap:3px; }
+  .ad-house .t{
+    font-family:var(--font-mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--green);
+  }
+  .ad-house .d{
+    font-size:12px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .ad-house .c{
+    flex-shrink:0;
+    font-family:var(--font-mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#000;
+    background:var(--green);
+    border:1px solid var(--green);
+    border-radius:var(--radius);
+    padding:8px 12px;
+    transition:background .2s var(--ease), color .2s var(--ease);
+  }
+  .ad-house:hover .c,
+  .ad-house:focus-visible .c{ background:transparent; color:var(--green); }
+
   /* ---------- botón ofertas patrocinadas ---------- */
   .offers{
     margin-top:30px;
@@ -494,6 +663,7 @@
 
   @media (max-width:560px){
     .player{ padding:40px 24px; }
+    .ad-house .d{ display:none; }
     .links{ flex-wrap:wrap; gap:12px; }
     .links a{ width:calc(50% - 6px); max-width:130px; height:54px; }
     .sponsors a{ width:calc(50% - 7px); max-width:150px; }
@@ -526,6 +696,16 @@
   <p class="sub">CHANNEL</p>
 
   <p class="live"><span class="dot" aria-hidden="true"></span> LIVE STREAM</p>
+
+  <!-- Pantalla del reproductor: solo imágenes del anuncio en stop motion. Al tocarla abre la oferta en pestaña nueva (la radio no se corta). -->
+  <a class="stage" id="stage" href="https://araplhn.org/4/8ef889958d5bcbf2b4fa9431a55bda52" target="_blank" rel="sponsored noopener" aria-label="Anuncio: ofertas seleccionadas (se abre en una pestaña nueva)">
+    <div class="scene" id="scene"></div>
+    <span class="vignette" aria-hidden="true"></span>
+    <span class="grain" aria-hidden="true"></span>
+    <span class="bar top" aria-hidden="true"></span>
+    <span class="bar bottom" aria-hidden="true"></span>
+    <span class="stage-tag" aria-hidden="true">PUBLICIDAD</span>
+  </a>
 
   <div class="eq" aria-hidden="true">
     <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -564,6 +744,20 @@
 
   <p class="status" id="status" data-state="offline" role="status" aria-live="polite">OFFLINE</p>
 
+  <!-- Espacio publicitario dentro del reproductor -->
+  <aside class="ad" id="adSlot" aria-label="Publicidad">
+    <span class="ad-label">PUBLICIDAD</span>
+
+    <!-- Para usar tu red de anuncios: pega su código aquí dentro.
+         Si hay contenido en este bloque, los anuncios propios de abajo se ocultan. -->
+    <div class="ad-network" id="adNetwork"></div>
+
+    <a class="ad-house" id="adHouse" target="_blank" rel="sponsored noopener">
+      <span class="txt"><span class="t"></span><span class="d"></span></span>
+      <span class="c"></span>
+    </a>
+  </aside>
+
   <!-- Se abre en pestaña nueva: la página con la radio sigue abierta y el audio no se corta -->
   <a class="offers" href="https://araplhn.org/4/8ef889958d5bcbf2b4fa9431a55bda52" target="_blank" rel="sponsored noopener" aria-label="Ofertas patrocinadas (se abre en una pestaña nueva)">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.6 11.4 12.6 3.4A2 2 0 0 0 11.2 3H5a2 2 0 0 0-2 2v6.2c0 .5.2 1 .6 1.4l8 8a2 2 0 0 0 2.8 0l6.2-6.2a2 2 0 0 0 0-2.8zM7.500 9a1.500 1.500 0 1 1 0-3 1.500 1.500 0 0 1 0 3z"/></svg>
@@ -597,18 +791,62 @@
 
 <script>
 (() => {
-  const radio = document.getElementById('radio');
-  const player = document.getElementById('player');
-  const playBtn = document.getElementById('play');
-  const playIcon = document.getElementById('playIcon');
-  const pauseIcon = document.getElementById('pauseIcon');
-  const status = document.getElementById('status');
-  const volumeSlider = document.getElementById('volume');
-  const muteBtn = document.getElementById('mute');
-  const volOn = document.getElementById('volOn');
-  const volOff = document.getElementById('volOff');
-  const logo = document.getElementById('logo');
+  /* =====================================================
+     CONFIGURACIÓN
+     ===================================================== */
+  const CONFIG = {
+    // Pantalla del reproductor (anuncio en stop motion cinematográfico).
+    stage: {
+      // Rutas de tus imágenes del anuncio, en orden. Ejemplo: ['anuncio/1.jpg', 'anuncio/2.jpg', 'anuncio/3.jpg']
+      // Mientras esté vacío se muestran las tarjetas de texto de abajo.
+      frames: [],
+      cards: [
+        ['OFERTAS', 'SELECCIONADAS'],
+        ['SOLO PARA', 'OYENTES GLITCH'],
+        ['TOCA PARA', 'DESCUBRIRLAS']
+      ],
+      holdMs: 2600,   // cuánto dura cada imagen
+      fps: 7          // cuadros por segundo del efecto stop motion (más bajo = más artesanal)
+    },
 
+    // Anuncios propios del espacio "Publicidad" (rotan si hay más de uno).
+    ads: [
+      {
+        title: 'Auspicia aquí',
+        text: 'Tu marca en el aire de Glitch Channel',
+        cta: 'Anunciar',
+        url: 'https://glitch-sonic-ads.base44.app/',
+        sponsored: false
+      }
+    ],
+    adRotateMs: 12000
+  };
+
+  /* =====================================================
+     ELEMENTOS
+     ===================================================== */
+  const $ = (id) => document.getElementById(id);
+  const radio = $('radio');
+  const player = $('player');
+  const playBtn = $('play');
+  const playIcon = $('playIcon');
+  const pauseIcon = $('pauseIcon');
+  const status = $('status');
+  const volumeSlider = $('volume');
+  const muteBtn = $('mute');
+  const volOn = $('volOn');
+  const volOff = $('volOff');
+  const logo = $('logo');
+  const scene = $('scene');
+  const adNetwork = $('adNetwork');
+  const adHouse = $('adHouse');
+  const adSlot = $('adSlot');
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* =====================================================
+     RADIO
+     ===================================================== */
   radio.volume = volumeSlider.value / 100;
 
   let userWantsPlay = false;
@@ -651,7 +889,7 @@
       setStatus('CONNECTING...', 'offline');
       await radio.play();
     } catch(err){
-      if (err && err.name === 'AbortError') return; // load() interrumpió el play, se reintenta solo
+      if (err && err.name === 'AbortError') return;   // load() interrumpió el play, se reintenta solo
       setStatus('STREAM ERROR — TAP TO RETRY', 'error');
       showPauseIcon(false);
       player.classList.remove('is-playing');
@@ -756,7 +994,96 @@
     togglePlay();
   });
 
-  /* glitch periódico del logo */
+  /* =====================================================
+     PANTALLA: STOP MOTION CINEMATOGRÁFICO
+     Cada cuadro mueve la escena un poco (temblor artesanal) y,
+     a lo largo de cada imagen, el zoom avanza a saltos.
+     ===================================================== */
+  const S = CONFIG.stage;
+  const useImages = S.frames.length > 0;
+  const slides = useImages ? S.frames : S.cards;
+  let slideIdx = -1;
+  let slideStart = 0;
+
+  if (useImages) S.frames.forEach((src) => { const im = new Image(); im.src = src; });   // precarga
+
+  function renderCard(pair){
+    scene.textContent = '';
+    const card = document.createElement('div');
+    card.className = 'card';
+    const l1 = document.createElement('span'); l1.className = 'l1'; l1.textContent = pair[0];
+    const l2 = document.createElement('span'); l2.className = 'l2'; l2.textContent = pair[1];
+    card.append(l1, l2);
+    scene.appendChild(card);
+  }
+
+  function showSlide(i){
+    slideIdx = i % slides.length;
+    slideStart = performance.now();
+    if (useImages){
+      scene.textContent = '';
+      const img = document.createElement('img');
+      img.alt = '';
+      img.decoding = 'async';
+      img.onerror = () => renderCard(S.cards[0]);
+      img.src = slides[slideIdx];
+      scene.appendChild(img);
+    } else {
+      renderCard(slides[slideIdx]);
+    }
+  }
+
+  function rnd(range){ return (Math.random() * 2 - 1) * range; }
+
+  function tick(){
+    if (document.hidden) return;
+    const now = performance.now();
+    if (slideIdx < 0 || now - slideStart >= S.holdMs) showSlide(slideIdx + 1);   // corte seco, sin fundidos
+
+    if (reduceMotion){ scene.style.transform = 'none'; return; }
+
+    const progress = Math.min((now - slideStart) / S.holdMs, 1);
+    const zoom = 1 + progress * 0.07;                       // empuje de cámara lento
+    const dx = rnd(1.2), dy = rnd(1.0), rot = rnd(0.35);   // temblor cuadro a cuadro
+    scene.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${zoom})`;
+  }
+
+  tick();
+  setInterval(tick, 1000 / S.fps);
+
+  /* =====================================================
+     PUBLICIDAD (espacio bajo los controles)
+     ===================================================== */
+  function fillAd(a, ad){
+    a.href = ad.url;
+    a.rel = ad.sponsored ? 'sponsored noopener' : 'noopener';
+    a.querySelector('.t').textContent = ad.title;
+    a.querySelector('.d').textContent = ad.text;
+    a.querySelector('.c').textContent = ad.cta;
+    a.setAttribute('aria-label', `${ad.title}: ${ad.text} (se abre en una pestaña nueva)`);
+  }
+
+  // Si pegaste el código de una red de anuncios en #adNetwork, se ocultan los anuncios propios.
+  const usingNetwork = adNetwork.children.length > 0 || adNetwork.textContent.trim() !== '';
+  let adIndex = 0;
+
+  function renderAd(){
+    fillAd(adHouse, CONFIG.ads[adIndex % CONFIG.ads.length]);
+  }
+
+  if (usingNetwork || !CONFIG.ads.length){
+    adHouse.hidden = true;
+    if (!usingNetwork) adSlot.hidden = true;
+  } else {
+    renderAd();
+    if (CONFIG.ads.length > 1){
+      setInterval(() => { adIndex++; renderAd(); }, CONFIG.adRotateMs);
+    }
+  }
+
+  /* =====================================================
+     GLITCH PERIÓDICO DEL LOGO
+     ===================================================== */
   function triggerGlitch(){
     logo.classList.add('is-glitching');
     setTimeout(() => logo.classList.remove('is-glitching'), 180);
@@ -765,9 +1092,7 @@
     const delay = 3000 + Math.random() * 5000;
     setTimeout(() => { triggerGlitch(); scheduleGlitch(); }, delay);
   }
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    scheduleGlitch();
-  }
+  if (!reduceMotion) scheduleGlitch();
 
   syncMuteIcon();
 })();
