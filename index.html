@@ -117,21 +117,21 @@
     justify-content:center;
     align-items:stretch;
     gap:14px;
-    margin-bottom:36px;
+    margin-bottom:28px;
     z-index:2;
   }
 
   .sponsors a{
-    width:120px;
-    height:58px;
+    width:104px;
+    height:46px;
     display:flex;
     justify-content:center;
     align-items:center;
     background:#fff;
     border:1px solid var(--line);
     border-radius:var(--radius);
-    padding:10px 14px;
-    opacity:.85;
+    padding:8px 12px;
+    opacity:.7;
     transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
   }
 
@@ -167,7 +167,6 @@
   .wm-openstream{ color:#111; font-size:14px; letter-spacing:-.01em; }
   .wm-openstream b{ color:#e8710a; }
 
-  .links svg{ width:34px; height:34px; }
 
   /* pestaña "Auspicia aquí" */
   .sponsors a.sponsor-cta{
@@ -176,10 +175,12 @@
     color:var(--green);
     flex-direction:column;
     gap:3px;
+    width:150px;
+    padding:6px 10px;
     font-family:var(--font-mono);
-    font-size:11px;
+    font-size:10px;
     font-weight:700;
-    letter-spacing:.18em;
+    letter-spacing:.14em;
     text-transform:uppercase;
     text-align:center;
     line-height:1.2;
@@ -189,9 +190,9 @@
   }
 
   .sponsors a.sponsor-cta small{
-    font-size:9px;
+    font-size:8px;
     font-weight:400;
-    letter-spacing:.12em;
+    letter-spacing:.08em;
     color:var(--muted);
     transition:color .2s var(--ease);
   }
@@ -325,17 +326,9 @@
   }
 
   /* ---------- controls ---------- */
-  .controls{
-    margin-top:30px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:18px;
-  }
-
   #play{
-    width:64px;
-    height:64px;
+    width:46px;
+    height:46px;
     border-radius:50%;
     background:transparent;
     border:1px solid var(--green);
@@ -350,7 +343,7 @@
 
   #play:hover{ background:var(--green); color:#000; box-shadow:0 0 28px rgba(57,255,106,.3); }
   #play:active{ transform:scale(.94); }
-  #play svg{ width:20px; height:20px; }
+  #play svg{ width:18px; height:18px; }
 
   .volume{
     display:flex;
@@ -412,23 +405,118 @@
   .status[data-state="error"]{ color:var(--red); }
 
   /* ---------- pantalla del reproductor: anuncio en stop motion cinematográfico ---------- */
-  .stage{
-    display:block;
+  .screen{
     position:relative;
-    aspect-ratio:16 / 9;
     margin-top:26px;
     background:#000;
     border:1px solid var(--line);
     border-radius:var(--radius);
     overflow:hidden;
-    text-align:center;
-    cursor:pointer;
     transition:border-color .2s var(--ease), box-shadow .2s var(--ease);
   }
-  .stage:hover,
-  .stage:focus-visible{
+  .screen:hover,
+  .screen:focus-within{
     border-color:var(--green-dim);
     box-shadow:0 0 28px rgba(57,255,106,.18);
+  }
+  .stage{
+    display:block;
+    position:relative;
+    aspect-ratio:16 / 9;
+    overflow:hidden;
+    text-align:center;
+    cursor:pointer;
+  }
+
+  /* ---------- reproductor dentro de la pantalla ---------- */
+  .deck{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:10px 14px;
+    background:#0b0b0d;
+    border-top:1px solid var(--line);
+  }
+  .deck-info{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    text-align:left;
+  }
+  .deck .status{
+    margin:0;
+    font-size:11px;
+    min-height:0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .deck .eq{
+    margin:0;
+    height:14px;
+    justify-content:flex-start;
+  }
+  .player.is-playing .deck .eq i{ animation-name:eqs; }
+  .player.needs-tap #play{ animation:tap 1.4s ease-in-out infinite; }
+  @keyframes tap{
+    0%, 100%{ box-shadow:0 0 0 0 rgba(57,255,106,.55); }
+    50%{ box-shadow:0 0 0 12px rgba(57,255,106,0); }
+  }
+  .player.needs-tap .status{ color:var(--green); }
+  @keyframes eqs{
+    0%, 100%{ height:3px; }
+    50%{ height:14px; }
+  }
+  .deck .volume{ flex:0 0 auto; width:132px; max-width:none; }
+
+  /* cinta de logos en scroll, dentro de la pantalla */
+  .ticker{
+    position:relative;
+    overflow:hidden;
+    background:#0b0b0d;
+    border-top:1px solid var(--line);
+    padding:9px 0;
+    -webkit-mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+            mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+  .ticker-track{
+    display:flex;
+    width:max-content;
+    animation:ticker 30s linear infinite;
+  }
+  .ticker:hover .ticker-track,
+  .ticker:focus-within .ticker-track{ animation-play-state:paused; }
+  @keyframes ticker{ to{ transform:translateX(-50%); } }
+
+  .ticker a{
+    flex:none;
+    height:30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-right:10px;
+    padding:0 14px;
+    background:#fff;
+    border-radius:3px;
+    opacity:.88;
+    transition:opacity .2s var(--ease), transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .ticker a:hover,
+  .ticker a:focus-visible{
+    opacity:1;
+    transform:translateY(-1px);
+    box-shadow:0 0 16px rgba(57,255,106,.35);
+  }
+  .ticker svg{ height:18px; width:auto; display:block; }
+  .ticker .wordmark{ font-size:14px; }
+  .ticker .wm-paypal{ font-size:15px; }
+  .ticker .wm-openstream{ font-size:13px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .ticker{ overflow-x:auto; }
+    .ticker-track{ animation:none; }
   }
 
   .scene{
@@ -445,6 +533,263 @@
     object-fit:cover;
     filter:contrast(1.12) saturate(.88) brightness(.95);
   }
+
+  .stage.is-live{ cursor:default; }
+
+  .gate{
+    position:absolute;
+    top:0; left:0; right:0;
+    aspect-ratio:16 / 9;
+    z-index:6;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:rgba(5,5,6,.78);
+    -webkit-backdrop-filter:blur(3px);
+            backdrop-filter:blur(3px);
+    border:none;
+    color:var(--green);
+    cursor:pointer;
+    font-family:var(--font-mono);
+  }
+  .player.needs-tap .gate{ display:flex; }
+  .gate-play{
+    width:68px;
+    height:68px;
+    border-radius:50%;
+    border:1.5px solid var(--green);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    animation:tap 1.4s ease-in-out infinite;
+    transition:background .2s var(--ease), color .2s var(--ease);
+  }
+  .gate-play svg{ width:28px; height:28px; margin-left:3px; }
+  .gate:hover .gate-play,
+  .gate:focus-visible .gate-play{ background:var(--green); color:#000; }
+  .gate-txt{ font-size:13px; font-weight:700; letter-spacing:.2em; }
+  .gate-sub{ font-size:10px; letter-spacing:.3em; color:var(--muted); }
+  .rv{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(57,255,106,.14), transparent 62%),
+      linear-gradient(180deg, #0c0d0f, #050506);
+  }
+  /* ---------- motion graphics de la pantalla ---------- */
+  .flash{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    background:radial-gradient(ellipse at 50% 48%, rgba(57,255,106,.55), transparent 66%);
+    opacity:calc(var(--beat, 0) * .2);
+  }
+  .fx{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:4;
+    pointer-events:none;
+  }
+
+  /* corte entre escenas: destello + rebanadas de glitch */
+  .scene.cut{ animation:cut .28s steps(1, end) 1; }
+  @keyframes cut{
+    0%  { filter:brightness(2.4) contrast(1.5); clip-path:inset(0 0 64% 0); }
+    22% { filter:hue-rotate(70deg) brightness(1.5); clip-path:inset(36% 0 0 0); }
+    44% { filter:brightness(1.7) saturate(1.6); clip-path:inset(0 0 28% 0); }
+    66% { filter:contrast(1.25); clip-path:inset(14% 0 0 0); }
+    100%{ filter:none; clip-path:inset(0); }
+  }
+
+  /* indicador de escenas (barra superior de cine) */
+  .pips{
+    position:absolute;
+    top:4%;
+    left:10px;
+    right:10px;
+    z-index:5;
+    display:flex;
+    gap:4px;
+    pointer-events:none;
+  }
+  .pip{ flex:1; height:2px; background:rgba(255,255,255,.2); }
+  .pip.done{ background:var(--green); }
+  .pip.cur{ background:linear-gradient(90deg, var(--green) calc(var(--p, 0) * 100%), rgba(255,255,255,.2) 0); }
+
+  /* ---------- "AHORA SUENA" con glitch ---------- */
+  .np{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:5%;
+    padding:0 7%;
+    text-align:left;
+  }
+  .stage.burst .np, .stage.burst .station{ animation:shake .26s steps(1, end) 1; }
+  @keyframes shake{
+    0%  { transform:translate(-6px, 0) skewX(-6deg); }
+    25% { transform:translate(7px, 1px) skewX(5deg); }
+    50% { transform:translate(-4px, -1px) skewX(-3deg); }
+    75% { transform:translate(5px, 0) skewX(2deg); }
+    100%{ transform:none; }
+  }
+  .np-cover{
+    flex:0 0 27%;
+    aspect-ratio:1;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg, #0f4a22, #041208);
+    border:1.5px solid #f5f5f5;
+    box-shadow:4px 4px 0 rgba(255,59,59,.85), -4px -4px 0 rgba(57,255,106,.6);
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(34px, 9vw, 64px);
+    color:var(--green);
+    text-shadow:2px 0 var(--red), -2px 0 rgba(0,255,224,.8);
+  }
+  .np-cover img{ width:100%; height:100%; object-fit:cover; filter:contrast(1.15) saturate(1.1); }
+  .np-cover::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.3) 0 1px, transparent 1px 3px);
+    pointer-events:none;
+  }
+  .np-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:.5em; }
+  .np-label{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-family:var(--font-mono);
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:.3em;
+    color:var(--green);
+  }
+  .np-label::before{
+    content:"";
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--red);
+    animation:pulse 1s ease-in-out infinite;
+  }
+  .np-title{
+    font-family:var(--font-display);
+    font-weight:700;
+    line-height:1.05;
+    letter-spacing:.02em;
+    color:#fff;
+    word-break:break-word;
+  }
+  .np-artist{
+    font-family:var(--font-mono);
+    font-weight:700;
+    letter-spacing:.14em;
+    color:var(--green);
+    word-break:break-word;
+  }
+  .np.compact{
+    position:absolute;
+    left:10px;
+    bottom:calc(12% + 6px);
+    width:auto;
+    max-width:76%;
+    padding:7px 11px;
+    background:rgba(5,5,6,.74);
+    border-left:2px solid var(--green);
+  }
+  .np.compact .np-cover{ display:none; }
+
+  .station{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.6em;
+  }
+  .st-word{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(40px, 17vw, 86px);
+    letter-spacing:.06em;
+    color:#fff;
+    line-height:1;
+  }
+  .st-sub{
+    font-family:var(--font-mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.34em;
+    color:var(--green);
+  }
+
+  /* texto glitch: copias roja y cian que se parten y desplazan */
+  .gl{ position:relative; display:block; }
+  .gl::before, .gl::after{
+    content:attr(data-text);
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    pointer-events:none;
+    opacity:0;
+  }
+  .gl::before{ color:#ff3b3b; animation:glA 2.6s steps(1, end) infinite; }
+  .gl::after{ color:#00ffe0; animation:glB 3.1s steps(1, end) infinite; }
+  @keyframes glA{
+    0%, 100%{ opacity:0; }
+    6%  { opacity:.9; clip-path:inset(10% 0 62% 0); transform:translate(-4px, 0); }
+    8%  { opacity:.9; clip-path:inset(54% 0 18% 0); transform:translate(5px, 0); }
+    10% { opacity:0; }
+    47% { opacity:.85; clip-path:inset(0 0 78% 0); transform:translate(3px, -1px); }
+    49% { opacity:0; }
+    81% { opacity:.9; clip-path:inset(70% 0 4% 0); transform:translate(-6px, 0); }
+    84% { opacity:0; }
+  }
+  @keyframes glB{
+    0%, 100%{ opacity:0; }
+    22% { opacity:.85; clip-path:inset(40% 0 38% 0); transform:translate(5px, 1px); }
+    24% { opacity:.85; clip-path:inset(0 0 70% 0); transform:translate(-4px, 0); }
+    26% { opacity:0; }
+    63% { opacity:.9; clip-path:inset(62% 0 8% 0); transform:translate(6px, 0); }
+    65% { opacity:0; }
+    90% { opacity:.8; clip-path:inset(20% 0 50% 0); transform:translate(-5px, 1px); }
+    92% { opacity:0; }
+  }
+  .stage.burst .gl::before{ animation:glBurstA .28s steps(1, end) 1; }
+  .stage.burst .gl::after{ animation:glBurstB .28s steps(1, end) 1; }
+  @keyframes glBurstA{
+    0%  { opacity:1; clip-path:inset(0 0 55% 0); transform:translate(-9px, 0); }
+    25% { opacity:1; clip-path:inset(40% 0 20% 0); transform:translate(10px, 2px); }
+    50% { opacity:1; clip-path:inset(15% 0 60% 0); transform:translate(-7px, 0); }
+    75% { opacity:1; clip-path:inset(60% 0 0 0); transform:translate(8px, -2px); }
+    100%{ opacity:0; }
+  }
+  @keyframes glBurstB{
+    0%  { opacity:1; clip-path:inset(50% 0 10% 0); transform:translate(9px, 0); }
+    25% { opacity:1; clip-path:inset(0 0 65% 0); transform:translate(-10px, -1px); }
+    50% { opacity:1; clip-path:inset(30% 0 35% 0); transform:translate(7px, 1px); }
+    75% { opacity:1; clip-path:inset(72% 0 0 0); transform:translate(-8px, 0); }
+    100%{ opacity:0; }
+  }
+
+  /* imágenes con separación RGB que crece con el glitch */
+  .gimg{ position:absolute; inset:0; overflow:hidden; background:#050506; }
+  .gimg img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .gimg .base{ filter:contrast(1.15) saturate(.9) brightness(.72); }
+  .gimg .r{ filter:url(#fR); mix-blend-mode:screen; opacity:.9; transform:translateX(calc(-1.5px - var(--gl, 0) * 16px)); }
+  .gimg .c{ filter:url(#fC); mix-blend-mode:screen; opacity:.9; transform:translateX(calc(1.5px + var(--gl, 0) * 16px)); }
 
   /* tarjetas tipográficas (se usan mientras no haya imágenes propias) */
   .card{
@@ -465,6 +810,30 @@
     font-size:clamp(18px, 5vw, 34px);
     line-height:1.05;
   }
+  .card .ch{
+    display:inline-block;
+    animation:pop .4s steps(4, end) backwards;
+    animation-delay:calc(var(--i, 0) * 42ms);
+  }
+  @keyframes pop{
+    from{ transform:translateY(.55em) rotate(7deg) scale(.55); opacity:0; }
+    60% { transform:translateY(-.08em) rotate(-2deg) scale(1.08); opacity:1; }
+    to  { transform:none; opacity:1; }
+  }
+  .card .cta{
+    margin-top:1em;
+    font-family:var(--font-mono);
+    font-size:.3em;
+    font-weight:700;
+    letter-spacing:.3em;
+    color:var(--green);
+    border:1px solid var(--green-dim);
+    border-radius:var(--radius);
+    padding:.55em 1em;
+    animation:pop .4s steps(4, end) 1.2s backwards;
+  }
+  .card .cta i{ font-style:normal; display:inline-block; animation:nudge .9s steps(3, end) infinite; }
+  @keyframes nudge{ 0%, 100%{ transform:translateX(0); } 50%{ transform:translateX(.35em); } }
   .card .l1{ color:var(--text); text-shadow:2px 0 var(--red), -2px 0 rgba(57,255,106,.8); }
   .card .l2{ color:var(--green); text-shadow:0 0 18px rgba(57,255,106,.45); }
 
@@ -508,7 +877,7 @@
 
   .stage-tag{
     position:absolute;
-    top:calc(12% + 6px);
+    bottom:calc(12% + 6px);
     right:8px;
     z-index:4;
     font-family:var(--font-mono);
@@ -607,42 +976,6 @@
     box-shadow:0 0 28px rgba(57,255,106,.3);
   }
 
-  /* ---------- footer links ---------- */
-  .links{
-    margin-top:44px;
-    display:flex;
-    justify-content:center;
-    gap:16px;
-  }
-
-  .links a{
-    width:96px;
-    height:64px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:12px 16px;
-    opacity:.85;
-    transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
-  }
-
-  .links a:hover,
-  .links a:focus-visible{
-    transform:translateY(-3px);
-    border-color:var(--green-dim);
-    box-shadow:0 0 24px rgba(57,255,106,.18);
-    opacity:1;
-  }
-
-  .links img{
-    max-width:100%;
-    max-height:100%;
-    object-fit:contain;
-  }
-
   .footer{
     margin-top:34px;
     font-family:var(--font-mono);
@@ -664,8 +997,8 @@
   @media (max-width:560px){
     .player{ padding:40px 24px; }
     .ad-house .d{ display:none; }
-    .links{ flex-wrap:wrap; gap:12px; }
-    .links a{ width:calc(50% - 6px); max-width:130px; height:54px; }
+    .deck{ gap:10px; padding:10px; }
+    .deck .volume{ width:108px; }
     .sponsors a{ width:calc(50% - 7px); max-width:150px; }
   }
 </style>
@@ -697,28 +1030,44 @@
 
   <p class="live"><span class="dot" aria-hidden="true"></span> LIVE STREAM</p>
 
-  <!-- Pantalla del reproductor: solo imágenes del anuncio en stop motion. Al tocarla abre la oferta en pestaña nueva (la radio no se corta). -->
+  <audio id="radio" preload="none">
+    <source src="https://listen.openstream.co/7499/audio">
+    <!-- respaldo: si Openstream falla, el navegador pasa solo a laut.fm -->
+    <source src="https://stream.laut.fm/glitch" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <!-- Pantalla del reproductor. En pausa / antes de play: anuncio (al tocarlo abre la oferta en pestaña nueva, la radio no se corta). Con la radio sonando: imágenes stop motion de música y radio. -->
+  <!-- filtros SVG para separar los canales de color (efecto glitch en imágenes) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="fR" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"/></filter>
+      <filter id="fC" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/></filter>
+    </defs>
+  </svg>
+  <div class="screen" id="screen">
+  <!-- Aviso que solo aparece si el navegador bloquea el sonido automático -->
+  <button type="button" class="gate" id="gate" aria-label="Tocar para escuchar la radio en directo">
+    <span class="gate-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </span>
+    <span class="gate-txt">TOCA PARA ESCUCHAR</span>
+    <span class="gate-sub">RADIO EN DIRECTO</span>
+  </button>
   <a class="stage" id="stage" href="https://araplhn.org/4/8ef889958d5bcbf2b4fa9431a55bda52" target="_blank" rel="sponsored noopener" aria-label="Anuncio: ofertas seleccionadas (se abre en una pestaña nueva)">
     <div class="scene" id="scene"></div>
+    <span class="flash" aria-hidden="true"></span>
     <span class="vignette" aria-hidden="true"></span>
     <span class="grain" aria-hidden="true"></span>
     <span class="bar top" aria-hidden="true"></span>
     <span class="bar bottom" aria-hidden="true"></span>
-    <span class="stage-tag" aria-hidden="true">PUBLICIDAD</span>
+    <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+    <span class="pips" id="pips" aria-hidden="true"></span>
+    <span class="stage-tag" id="stageTag" aria-hidden="true">PUBLICIDAD</span>
   </a>
 
-  <div class="eq" aria-hidden="true">
-    <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-  </div>
-
-  <audio id="radio" preload="none">
-    <source src="https://stream.laut.fm/glitch" type="audio/mpeg">
-    <!-- respaldo: si laut.fm falla, el navegador pasa solo a Openstream -->
-    <source src="https://listen.openstream.co/7499/audio">
-    Tu navegador no soporta audio HTML5.
-  </audio>
-
-  <div class="controls">
+  <!-- Reproductor: controles dentro de la pantalla -->
+  <div class="deck">
     <button id="play" type="button" aria-pressed="false" aria-label="Reproducir">
       <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M8 5v14l11-7z"/>
@@ -727,6 +1076,13 @@
         <path d="M6 5h4v14H6zM14 5h4v14h-4z"/>
       </svg>
     </button>
+
+    <div class="deck-info">
+      <p class="status" id="status" data-state="offline" role="status" aria-live="polite">OFFLINE</p>
+      <div class="eq" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </div>
 
     <div class="volume">
       <button id="mute" type="button" aria-label="Silenciar" aria-pressed="false">
@@ -742,7 +1098,30 @@
     </div>
   </div>
 
-  <p class="status" id="status" data-state="offline" role="status" aria-live="polite">OFFLINE</p>
+  <!-- Logos en scroll dentro de la pantalla (cada uno abre en pestaña nueva; la radio no se corta) -->
+  <nav class="ticker" aria-label="Enlaces">
+    <div class="ticker-track" id="tickerTrack">
+      <a href="https://www.youtube.com/@glitchchannelive" target="_blank" rel="noopener noreferrer" aria-label="Canal de YouTube de Glitch Channel">
+        <svg viewBox="0 0 159 110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#f00" d="M154 17.5c-1.8-6.7-7-11.9-13.7-13.7C128.4 0 79.7 0 79.7 0S31 0 19.1 3.8C12.4 5.6 7.2 10.8 5.4 17.5 1.6 29.4 1.6 55 1.6 55s0 25.6 3.8 37.5c1.8 6.7 7 11.9 13.7 13.7C31 110 79.7 110 79.7 110s48.7 0 60.6-3.8c6.7-1.8 11.9-7 13.7-13.7 3.8-11.9 3.8-37.5 3.8-37.5s0-25.6-3.8-37.5z"/>
+          <path fill="#fff" d="M64 78.6 104.5 55 64 31.4z"/>
+        </svg>
+      </a>
+      <a href="https://www.facebook.com/glitchrtv" target="_blank" rel="noopener noreferrer" aria-label="Síguenos en Facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="12" fill="#1877f2"/>
+          <path fill="#fff" d="M13.4 19v-6.3h2.1l.4-2.6h-2.5V8.5c0-.8.3-1.3 1.4-1.3h1.2V4.9c-.2 0-1-.1-1.9-.1-2 0-3.3 1.2-3.3 3.400v1.700H8.700v2.600h2.100V19z"/>
+        </svg>
+      </a>
+      <a href="https://paypal.me/glitchchannel" target="_blank" rel="noopener noreferrer" aria-label="Apoya el canal en PayPal">
+        <span class="wordmark wm-paypal"><b>Pay</b><b>Pal</b></span>
+      </a>
+      <a href="https://listen.openstream.co/7499" target="_blank" rel="noopener noreferrer" aria-label="Escuchar en Openstream">
+        <span class="wordmark wm-openstream"><b>open</b>stream</span>
+      </a>
+    </div>
+  </nav>
+  </div>
 
   <!-- Espacio publicitario dentro del reproductor -->
   <aside class="ad" id="adSlot" aria-label="Publicidad">
@@ -764,27 +1143,6 @@
     Ofertas patrocinadas
   </a>
 
-  <nav class="links" aria-label="Enlaces">
-    <a href="https://www.youtube.com/@glitchchannelive" target="_blank" rel="noopener noreferrer" aria-label="Canal de YouTube de Glitch Channel">
-      <svg viewBox="0 0 159 110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#f00" d="M154 17.5c-1.8-6.7-7-11.9-13.7-13.7C128.4 0 79.7 0 79.7 0S31 0 19.1 3.8C12.4 5.6 7.2 10.8 5.4 17.5 1.6 29.4 1.6 55 1.6 55s0 25.6 3.8 37.5c1.8 6.7 7 11.9 13.7 13.7C31 110 79.7 110 79.7 110s48.7 0 60.6-3.8c6.7-1.8 11.9-7 13.7-13.7 3.8-11.9 3.8-37.5 3.8-37.5s0-25.6-3.8-37.5z"/>
-        <path fill="#fff" d="M64 78.6 104.5 55 64 31.4z"/>
-      </svg>
-    </a>
-    <a href="https://www.facebook.com/glitchrtv" target="_blank" rel="noopener noreferrer" aria-label="Síguenos en Facebook">
-      <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="12" fill="#1877f2"/>
-        <path fill="#fff" d="M13.4 19v-6.3h2.1l.4-2.6h-2.5V8.5c0-.8.3-1.3 1.4-1.3h1.2V4.9c-.2 0-1-.1-1.9-.1-2 0-3.3 1.2-3.3 3.400v1.700H8.700v2.600h2.100V19z"/>
-      </svg>
-    </a>
-    <a href="https://paypal.me/glitchchannel" target="_blank" rel="noopener noreferrer" aria-label="Apoya el canal en PayPal">
-      <span class="wordmark wm-paypal"><b>Pay</b><b>Pal</b></span>
-    </a>
-    <a href="https://listen.openstream.co/7499" target="_blank" rel="noopener noreferrer" aria-label="Escuchar en Openstream">
-      <span class="wordmark wm-openstream"><b>open</b>stream</span>
-    </a>
-  </nav>
-
   <p class="footer">GLITCH CHANNEL © 2026</p>
 
 </main>
@@ -797,9 +1155,11 @@
   const CONFIG = {
     // Pantalla del reproductor (anuncio en stop motion cinematográfico).
     stage: {
-      // Rutas de tus imágenes del anuncio, en orden. Ejemplo: ['anuncio/1.jpg', 'anuncio/2.jpg', 'anuncio/3.jpg']
+      // Imágenes del ANUNCIO (se ven antes de dar play y en pausa). Ejemplo: ['anuncio/1.jpg', 'anuncio/2.jpg']
       // Mientras esté vacío se muestran las tarjetas de texto de abajo.
       frames: [],
+      // Imágenes que se ven MIENTRAS suena la radio (opcional). Vacío = escenas animadas de música y radio incluidas.
+      radioFrames: [],
       cards: [
         ['OFERTAS', 'SELECCIONADAS'],
         ['SOLO PARA', 'OYENTES GLITCH'],
@@ -809,16 +1169,16 @@
       fps: 7          // cuadros por segundo del efecto stop motion (más bajo = más artesanal)
     },
 
-    // Anuncios propios del espacio "Publicidad" (rotan si hay más de uno).
-    ads: [
-      {
-        title: 'Auspicia aquí',
-        text: 'Tu marca en el aire de Glitch Channel',
-        cta: 'Anunciar',
-        url: 'https://glitch-sonic-ads.base44.app/',
-        sponsored: false
-      }
-    ],
+    // "Ahora suena": de dónde lee la pantalla el artista y la canción que están sonando.
+    // Por defecto, la API pública de laut.fm (emisora "glitch"). Entiende JSON de laut.fm, AzuraCast, Icecast
+    // y formatos con "title" / "artist". Si no puede leerlo, la pantalla muestra solo el nombre de la emisora.
+    nowPlaying: {
+      url: 'https://api.laut.fm/station/glitch/current_song',
+      everyMs: 15000
+    },
+
+    // Anuncios propios del espacio "Publicidad". Vacío = el espacio solo aparece si pegas el código de tu red en #adNetwork.
+    ads: [],
     adRotateMs: 12000
   };
 
@@ -850,6 +1210,7 @@
   radio.volume = volumeSlider.value / 100;
 
   let userWantsPlay = false;
+  let userPaused = false;
   let retryCount = 0;
   let retryTimer = null;
   const MAX_RETRY_DELAY = 30000;
@@ -890,6 +1251,15 @@
       await radio.play();
     } catch(err){
       if (err && err.name === 'AbortError') return;   // load() interrumpió el play, se reintenta solo
+      if (err && err.name === 'NotAllowedError'){      // el navegador bloqueó el sonido automático
+        userWantsPlay = false;
+        showPauseIcon(false);
+        player.classList.remove('is-playing');
+        player.classList.add('needs-tap');
+        setStatus('TOCA PARA ESCUCHAR', 'offline');
+        armFirstInteraction();
+        return;
+      }
       setStatus('STREAM ERROR — TAP TO RETRY', 'error');
       showPauseIcon(false);
       player.classList.remove('is-playing');
@@ -898,7 +1268,9 @@
   }
 
   function stopPlayback(){
+    userPaused = true;                // si el usuario pausa, no se vuelve a arrancar solo
     userWantsPlay = false;
+    player.classList.remove('needs-tap');
     clearRetry();
     radio.pause();
     showPauseIcon(false);
@@ -908,6 +1280,8 @@
 
   function togglePlay(){
     if (!userWantsPlay){
+      userPaused = false;
+      player.classList.remove('needs-tap');
       userWantsPlay = true;
       retryCount = 0;
       showPauseIcon(true);
@@ -918,6 +1292,37 @@
   }
 
   playBtn.addEventListener('click', togglePlay);
+  $('gate').addEventListener('click', () => { if (!userWantsPlay) togglePlay(); });
+
+  /* AUTOPLAY: al abrir intenta sonar. Si el navegador lo bloquea (casi siempre lo hace
+     hasta que la persona toca la página), arranca con el primer toque o tecla. */
+  let armed = false;
+  function armFirstInteraction(){
+    if (armed) return;
+    armed = true;
+    const start = (e) => {
+      if (userWantsPlay || userPaused) return;
+      if (e.type === 'keydown' && (e.code === 'Space' || e.code === 'Enter' || e.code === 'Tab')) return;
+      if (e.target && e.target.closest && e.target.closest('.deck, .gate')) return;   // play y aviso se gestionan solos
+      stop();
+      togglePlay();
+    };
+    const stop = () => {
+      armed = false;
+      document.removeEventListener('pointerdown', start, true);
+      document.removeEventListener('keydown', start, true);
+    };
+    document.addEventListener('pointerdown', start, true);
+    document.addEventListener('keydown', start, true);
+  }
+
+  function autoplay(){
+    if (userWantsPlay || userPaused) return;
+    userWantsPlay = true;
+    retryCount = 0;
+    showPauseIcon(true);
+    attemptPlay();
+  }
 
   /* volumen y mute */
   function syncMuteIcon(){
@@ -995,61 +1400,557 @@
   });
 
   /* =====================================================
-     PANTALLA: STOP MOTION CINEMATOGRÁFICO
-     Cada cuadro mueve la escena un poco (temblor artesanal) y,
-     a lo largo de cada imagen, el zoom avanza a saltos.
+     PANTALLA: GLITCH + "AHORA SUENA"
+     - Antes de dar play y en pausa: publicidad (texto cinético, destellos, rótulo).
+     - Con la radio sonando: la pantalla LEE lo que suena (artista y canción) y lo
+       muestra con efectos glitch: texto que se descifra, separación RGB, rebanadas,
+       interferencias VHS, osciloscopio y un rótulo que repite el tema por la barra inferior.
+     Capas de movimiento:
+       1) escena a pocos fps (temblor de stop motion)
+       2) efectos suaves en canvas (osciloscopio, rebanadas, partículas)
+       3) variables --beat y --gl que hacen latir y "romperse" el conjunto
      ===================================================== */
   const S = CONFIG.stage;
-  const useImages = S.frames.length > 0;
-  const slides = useImages ? S.frames : S.cards;
-  let slideIdx = -1;
-  let slideStart = 0;
+  const NPC = CONFIG.nowPlaying;
+  const stage = $('stage');
+  const stageTag = $('stageTag');
+  const fx = $('fx');
+  const ctx = fx.getContext('2d');
+  const pips = $('pips');
+  const AD_URL = stage.getAttribute('href');
+  const AD_LABEL = stage.getAttribute('aria-label');
+  const BPM = 124;                   // ritmo del pulso visual
+  const BEAT = 60000 / BPM;
+  const beatPhase = (now) => (now % BEAT) / BEAT;
+  const beatAt = (now) => Math.pow(1 - beatPhase(now), 2.6);    // golpe seco que decae
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const GLYPHS = '█▓▒░#@$%&*+=/<>01';
 
-  if (useImages) S.frames.forEach((src) => { const im = new Image(); im.src = src; });   // precarga
+  /* --- lectura de lo que suena --- */
+  let nowPlaying = null;             // { title, artist, cover } o null si no se puede leer
+  let npKey = '';
+  let npRefs = null;                 // elementos de la tarjeta "ahora suena" visible
 
-  function renderCard(pair){
-    scene.textContent = '';
-    const card = document.createElement('div');
-    card.className = 'card';
-    const l1 = document.createElement('span'); l1.className = 'l1'; l1.textContent = pair[0];
-    const l2 = document.createElement('span'); l2.className = 'l2'; l2.textContent = pair[1];
-    card.append(l1, l2);
-    scene.appendChild(card);
+  function cleanText(v){
+    return (typeof v === 'string' ? v : '').replace(/\s+/g, ' ').trim();
   }
 
-  function showSlide(i){
-    slideIdx = i % slides.length;
-    slideStart = performance.now();
-    if (useImages){
-      scene.textContent = '';
-      const img = document.createElement('img');
-      img.alt = '';
-      img.decoding = 'async';
-      img.onerror = () => renderCard(S.cards[0]);
-      img.src = slides[slideIdx];
-      scene.appendChild(img);
+  // entiende los formatos más habituales: laut.fm, AzuraCast, Icecast y JSON genérico
+  function parseNowPlaying(j){
+    if (!j || typeof j !== 'object') return null;
+    let title = '', artist = '', cover = '';
+    if (j.now_playing && j.now_playing.song){                         // AzuraCast
+      const s = j.now_playing.song;
+      title = s.title; artist = s.artist; cover = s.art;
+    } else if (j.icestats){                                           // Icecast
+      let src = j.icestats.source;
+      if (Array.isArray(src)) src = src[0];
+      if (src){ title = src.title; artist = src.artist; if (!title && src.yp_currently_playing) title = src.yp_currently_playing; }
+    } else {                                                          // laut.fm y genéricos
+      title = j.title || j.song || j.track || j.name;
+      const a = j.artist || j.artist_name || j.author;
+      artist = (a && typeof a === 'object') ? (a.name || '') : a;
+      const al = j.album;
+      cover = j.cover || j.art || j.image || j.artwork ||
+              (al && typeof al === 'object' ? (al.image || al.cover) : '') ||
+              (j.images && (j.images.large || j.images.medium || j.images.small)) || '';
+    }
+    title = cleanText(title);
+    artist = cleanText(artist);
+    if (!artist && title.indexOf(' - ') > 0){                         // "Artista - Tema" en un solo campo
+      const parts = title.split(' - ');
+      artist = cleanText(parts.shift());
+      title = cleanText(parts.join(' - '));
+    }
+    if (!title) return null;
+    cover = (typeof cover === 'string' && cover.indexOf('https://') === 0) ? cover : '';
+    return { title, artist, cover };
+  }
+
+  async function pollNowPlaying(){
+    if (!NPC || !NPC.url) return;
+    try{
+      const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const to = ctl ? setTimeout(() => ctl.abort(), 8000) : null;
+      const res = await fetch(NPC.url, { cache: 'no-store', signal: ctl ? ctl.signal : undefined });
+      if (to) clearTimeout(to);
+      if (!res.ok) return;
+      const np = parseNowPlaying(await res.json());
+      if (!np) return;
+      const key = np.artist + '|' + np.title;
+      if (key === npKey) return;
+      npKey = key;
+      nowPlaying = np;
+      onNowPlayingChange();
+    } catch(e){ /* sin acceso a los datos: la pantalla muestra solo el nombre de la emisora */ }
+  }
+
+  function onNowPlayingChange(){
+    if (sceneMode === 'radio' && npRefs){ fillNow(true); glitchBurst(1); }
+    if ('mediaSession' in navigator && nowPlaying){
+      try{
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: nowPlaying.title,
+          artist: nowPlaying.artist || 'Glitch Channel',
+          artwork: nowPlaying.cover ? [{ src: nowPlaying.cover }] : []
+        });
+      } catch(e){}
+    }
+  }
+
+  if (NPC && NPC.url){
+    setInterval(() => { if (sceneMode === 'radio' && !document.hidden) pollNowPlaying(); }, NPC.everyMs || 15000);
+  }
+
+  /* --- texto que se descifra (efecto "decodificando") --- */
+  function setGlText(el, text, animate){
+    const t = String(text || '').toUpperCase();
+    if (el._raf){ cancelAnimationFrame(el._raf); el._raf = null; }
+    const paint = (s) => { el.textContent = s; el.setAttribute('data-text', s); };
+    if (!animate || reduceMotion){ paint(t); return; }
+    const chars = Array.from(t);
+    const t0 = performance.now();
+    const ms = Math.min(1100, 380 + chars.length * 28);
+    const step = (now) => {
+      const p = (now - t0) / ms;
+      if (p >= 1){ paint(t); el._raf = null; return; }
+      let out = '';
+      for (let i = 0; i < chars.length; i++){
+        const c = chars[i];
+        out += (c === ' ' || p > 0.12 + 0.88 * (i / chars.length)) ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      }
+      paint(out);
+      el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+  }
+
+  /* --- estado de la pantalla --- */
+  const hasAdFrames = S.frames.length > 0;
+  const hasRadioFrames = S.radioFrames.length > 0;
+  const AD_SLIDES = hasAdFrames
+    ? S.frames.map((src) => ({ type: 'img', src, hold: S.holdMs }))
+    : S.cards.map((pair) => ({ type: 'card', pair, hold: S.holdMs }));
+  const RADIO_SLIDES = hasRadioFrames
+    ? S.radioFrames.map((src) => ({ type: 'glimg', src, hold: 3400 }))
+    : [{ type: 'now', hold: 6500 }, { type: 'station', hold: 2600 }];
+  const slidesFor = (m) => (m === 'radio' ? RADIO_SLIDES : AD_SLIDES);
+
+  let sceneMode = null;      // 'ad' | 'radio'
+  let slideIdx = -1;
+  let slideStart = 0;
+  let curHold = S.holdMs;
+
+  [...S.frames, ...S.radioFrames].forEach((src) => { const im = new Image(); im.src = src; });   // precarga
+
+  const restart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+
+  /* --- glitch global: ráfagas que rompen la imagen --- */
+  let glitchLevel = 0;               // 0..1, decae solo
+  let burstTimer = null;
+  function glitchBurst(power){
+    glitchLevel = Math.max(glitchLevel, power || 1);
+    if (reduceMotion) return;
+    stage.classList.add('burst');
+    clearTimeout(burstTimer);
+    burstTimer = setTimeout(() => stage.classList.remove('burst'), 280);
+  }
+  (function scheduleBurst(){
+    setTimeout(() => {
+      if (sceneMode === 'radio' && !document.hidden) glitchBurst(.55 + Math.random() * .45);
+      scheduleBurst();
+    }, 1100 + Math.random() * 2400);
+  })();
+
+  /* --- piezas de las diapositivas --- */
+  function makeImg(src){
+    const img = document.createElement('img');
+    img.alt = '';
+    img.decoding = 'async';
+    img.onerror = () => { img.remove(); };
+    img.src = src;
+    return img;
+  }
+
+  // imagen con separación RGB que reacciona al glitch
+  function makeGlitchImg(src){
+    const box = document.createElement('div');
+    box.className = 'gimg';
+    ['base', 'r', 'c'].forEach((cls) => {
+      const im = makeImg(src);
+      im.className = cls;
+      box.appendChild(im);
+    });
+    return box;
+  }
+
+  // texto que aparece letra a letra, como cuadros de stop motion
+  function typeLine(parent, text, startIndex){
+    parent.setAttribute('aria-label', text);
+    Array.from(text).forEach((ch, i) => {
+      const s = document.createElement('span');
+      s.className = 'ch';
+      s.setAttribute('aria-hidden', 'true');
+      s.style.setProperty('--i', String(startIndex + i));
+      s.textContent = ch === ' ' ? ' ' : ch;
+      parent.appendChild(s);
+    });
+    return startIndex + text.length;
+  }
+
+  function renderCard(pair){
+    const card = document.createElement('div');
+    card.className = 'card';
+    const l1 = document.createElement('span'); l1.className = 'l1';
+    const l2 = document.createElement('span'); l2.className = 'l2';
+    const n = typeLine(l1, pair[0], 0);
+    typeLine(l2, pair[1], n + 2);
+    const cta = document.createElement('span');
+    cta.className = 'cta';
+    cta.append('TOCA PARA VER ');
+    const arrow = document.createElement('i'); arrow.textContent = '›';
+    cta.appendChild(arrow);
+    card.append(l1, l2, cta);
+    return card;
+  }
+
+  // tarjeta "AHORA SUENA"
+  function buildNow(compact){
+    const root = document.createElement('div');
+    root.className = 'np' + (compact ? ' compact' : '');
+    const cover = document.createElement('div'); cover.className = 'np-cover';
+    const txt = document.createElement('div'); txt.className = 'np-text';
+    const label = document.createElement('span'); label.className = 'np-label';
+    const title = document.createElement('span'); title.className = 'np-title gl';
+    const artist = document.createElement('span'); artist.className = 'np-artist gl';
+    txt.append(label, title, artist);
+    root.append(cover, txt);
+    npRefs = { root, cover, label, title, artist, compact: !!compact };
+    fillNow(true);
+    return root;
+  }
+
+  function fillNow(animate){
+    if (!npRefs) return;
+    const live = !!nowPlaying;
+    const title = live ? nowPlaying.title : 'GLITCH CHANNEL';
+    const artist = live ? (nowPlaying.artist || 'EN DIRECTO') : 'EN DIRECTO';
+    npRefs.label.textContent = live ? 'AHORA SUENA' : 'SEÑAL EN VIVO';
+
+    const w = stage.clientWidth || 400;
+    const L = title.length;
+    const k = npRefs.compact ? .05 : (L <= 10 ? .085 : L <= 18 ? .07 : L <= 28 ? .056 : .046);
+    npRefs.title.style.fontSize = Math.max(13, Math.round(w * k)) + 'px';
+    npRefs.artist.style.fontSize = Math.max(9, Math.round(w * (npRefs.compact ? .03 : .034))) + 'px';
+    setGlText(npRefs.title, title, animate);
+    setGlText(npRefs.artist, artist, animate);
+
+    // carátula (si la emisora la facilita) o logotipo
+    npRefs.cover.textContent = '';
+    if (live && nowPlaying.cover){
+      const im = document.createElement('img');
+      im.alt = '';
+      im.referrerPolicy = 'no-referrer';
+      im.onerror = () => { npRefs.cover.textContent = 'G'; };
+      im.src = nowPlaying.cover;
+      npRefs.cover.appendChild(im);
     } else {
-      renderCard(slides[slideIdx]);
+      npRefs.cover.textContent = 'G';
+    }
+  }
+
+  function buildStation(){
+    const root = document.createElement('div');
+    root.className = 'station';
+    const word = document.createElement('span');
+    word.className = 'st-word gl';
+    word.textContent = 'GLITCH';
+    word.setAttribute('data-text', 'GLITCH');
+    const sub = document.createElement('span');
+    sub.className = 'st-sub';
+    sub.textContent = 'CHANNEL · EN DIRECTO 24/7';
+    root.append(word, sub);
+    return root;
+  }
+
+  function buildPips(n){
+    if (pips.children.length === n) return;
+    pips.textContent = '';
+    for (let i = 0; i < n; i++){
+      const p = document.createElement('span');
+      p.className = 'pip';
+      pips.appendChild(p);
+    }
+  }
+
+  function setSceneMode(m){
+    sceneMode = m;
+    slideIdx = -1;
+    npRefs = null;
+    particles.forEach((p) => resetParticle(p));
+    if (m === 'radio'){
+      stage.removeAttribute('href');                       // en directo no se abre ningún enlace
+      stage.setAttribute('aria-label', 'Pantalla en directo de la radio');
+      stage.classList.add('is-live');
+      stageTag.textContent = 'EN DIRECTO';
+      pollNowPlaying();                                    // lee lo que suena justo al empezar
+    } else {
+      stage.setAttribute('href', AD_URL);
+      stage.setAttribute('aria-label', AD_LABEL);
+      stage.classList.remove('is-live', 'burst');
+      stageTag.textContent = 'PUBLICIDAD';
+      stage.style.setProperty('--beat', '0');
+      stage.style.setProperty('--gl', '0');
+    }
+  }
+
+  function drawSlide(now){
+    const list = slidesFor(sceneMode);
+    const sl = list[slideIdx];
+    slideStart = now;
+    curHold = sl.hold;
+    scene.textContent = '';
+    npRefs = null;
+    buildPips(list.length);
+    if (!reduceMotion){ restart(scene, 'cut'); if (sceneMode === 'radio') glitchBurst(.9); }   // corte con destello y rebanadas
+
+    if (sl.type === 'now'){
+      const rv = document.createElement('div'); rv.className = 'rv';
+      rv.appendChild(buildNow(false));
+      scene.appendChild(rv);
+    } else if (sl.type === 'station'){
+      const rv = document.createElement('div'); rv.className = 'rv';
+      rv.appendChild(buildStation());
+      scene.appendChild(rv);
+    } else if (sl.type === 'glimg'){
+      scene.appendChild(makeGlitchImg(sl.src));
+      scene.appendChild(buildNow(true));
+    } else if (sl.type === 'img'){
+      scene.appendChild(makeImg(sl.src));
+    } else {
+      scene.appendChild(renderCard(sl.pair));
+    }
+    updatePips(now);
+  }
+
+  function updatePips(now){
+    const p = clamp01((now - slideStart) / curHold);
+    for (let i = 0; i < pips.children.length; i++){
+      const el = pips.children[i];
+      const cls = i < slideIdx ? 'pip done' : (i === slideIdx ? 'pip cur' : 'pip');
+      if (el.className !== cls) el.className = cls;
+      if (i === slideIdx) el.style.setProperty('--p', p.toFixed(3));
     }
   }
 
   function rnd(range){ return (Math.random() * 2 - 1) * range; }
 
+  /* --- capa 1: escena a pocos fps (temblor) --- */
   function tick(){
     if (document.hidden) return;
+
+    // la pantalla sigue a la radio: sonando -> pantalla en directo; pausa / antes de play -> publicidad
+    const wanted = player.classList.contains('is-playing') ? 'radio' : 'ad';
     const now = performance.now();
-    if (slideIdx < 0 || now - slideStart >= S.holdMs) showSlide(slideIdx + 1);   // corte seco, sin fundidos
+    if (wanted !== sceneMode) setSceneMode(wanted);
 
-    if (reduceMotion){ scene.style.transform = 'none'; return; }
+    const list = slidesFor(sceneMode);
+    if (slideIdx < 0 || now - slideStart >= curHold){
+      slideIdx = (slideIdx + 1) % list.length;             // corte, sin fundidos
+      drawSlide(now);
+    }
 
-    const progress = Math.min((now - slideStart) / S.holdMs, 1);
-    const zoom = 1 + progress * 0.07;                       // empuje de cámara lento
-    const dx = rnd(1.2), dy = rnd(1.0), rot = rnd(0.35);   // temblor cuadro a cuadro
-    scene.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${zoom})`;
+    if (reduceMotion){ updatePips(now); scene.style.transform = 'none'; return; }
+
+    const progress = clamp01((now - slideStart) / curHold);
+    const zoom = 1 + progress * 0.05;                       // empuje de cámara lento
+    const k = 1 + glitchLevel * 3;                          // con el glitch tiembla más
+    const dx = rnd(1.1 * k), dy = rnd(0.9 * k), rot = rnd(0.3 * k);
+    const bump = sceneMode === 'radio' ? 'calc(var(--beat, 0) * 0.014)' : '0';   // latido suave encima del stop motion
+    scene.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(calc(${zoom} + ${bump}))`;
+  }
+
+  /* --- capas 2 y 3: canvas fluido + variables --beat / --gl (60 fps) --- */
+  let dpr = 1;
+  function resizeFx(){
+    const r = stage.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    fx.width = Math.max(1, Math.round(r.width * dpr));
+    fx.height = Math.max(1, Math.round(r.height * dpr));
+    if (npRefs) fillNow(false);                             // reajusta el tamaño del texto
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(resizeFx).observe(stage);
+  else window.addEventListener('resize', resizeFx);
+  resizeFx();
+
+  const particles = Array.from({ length: 26 }, () => ({}));
+  function resetParticle(p, initial){
+    p.x = Math.random();
+    p.y = initial === false ? 1.05 : Math.random();
+    p.v = 0.02 + Math.random() * 0.05;                      // velocidad de subida
+    p.s = 0.6 + Math.random() * 1.6;                        // tamaño
+    p.ph = Math.random() * 6.28;
+    p.c = Math.random() < .3 ? '245,245,245' : '57,255,106';
+  }
+  particles.forEach((p) => resetParticle(p));
+
+  const SPARKS = [[.16, .30], [.82, .26], [.28, .72], [.74, .70], [.50, .20], [.10, .55], [.90, .52]];
+  const AD_MARQUEE = '●  OFERTAS SELECCIONADAS  ●  SOLO PARA OYENTES GLITCH  ●  TOCA PARA VER  ';
+  const STRIP_COLORS = ['57,255,106', '255,59,59', '0,255,224', '245,245,245'];
+  let strips = [];
+  let stripsAt = 0;
+  let lastFx = 0;
+
+  function marquee(text, now, w, h, speed){
+    ctx.font = `700 ${Math.round(9.5 * dpr)}px "JetBrains Mono", Menlo, Consolas, monospace`;
+    ctx.textBaseline = 'middle';
+    const tw = ctx.measureText(text).width || 1;
+    const off = -((now / 1000 * speed * dpr) % tw);
+    for (let x = off; x < w; x += tw) ctx.fillText(text, x, h - h * .06);
+  }
+
+  function drawFx(now, b, dt){
+    const w = fx.width, h = fx.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // partículas flotantes (polvo de luz)
+    particles.forEach((p) => {
+      p.y -= p.v * dt;
+      if (p.y < -0.05) resetParticle(p, false);
+      const a = (0.25 + 0.35 * Math.sin(now / 500 + p.ph)) * (sceneMode === 'radio' ? (0.7 + b * .6) : 1);
+      ctx.fillStyle = `rgba(${p.c},${Math.max(0, a).toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(p.x * w, p.y * h, p.s * dpr, 0, 6.2832);
+      ctx.fill();
+    });
+
+    if (sceneMode === 'radio'){
+      const g = glitchLevel;
+
+      // rebanadas de color que se desplazan (interferencia)
+      if (now - stripsAt > 85){
+        stripsAt = now;
+        const n = 2 + Math.floor(7 * g) + (b > .6 ? 2 : 0);
+        strips = Array.from({ length: n }, () => ({
+          y: Math.random() * h,
+          hh: (.008 + Math.random() * .05) * h,
+          x: Math.random() * w * .4,
+          ww: (.3 + Math.random() * .7) * w,
+          c: STRIP_COLORS[(Math.random() * STRIP_COLORS.length) | 0],
+          a: .05 + Math.random() * .12 + g * .2
+        }));
+      }
+      strips.forEach((s) => {
+        ctx.fillStyle = `rgba(${s.c},${s.a.toFixed(3)})`;
+        ctx.fillRect(s.x, s.y, s.ww, s.hh);
+      });
+
+      // barra de seguimiento VHS que baja por la pantalla
+      const ty = ((now / 2600) % 1) * h * 1.1 - h * .05;
+      ctx.fillStyle = 'rgba(255,255,255,.1)';
+      ctx.fillRect(0, ty, w, 2.5 * dpr);
+      ctx.fillStyle = 'rgba(57,255,106,.06)';
+      ctx.fillRect(0, ty + 2.5 * dpr, w, 14 * dpr);
+
+      // bloques de píxeles al romperse la imagen
+      if (g > .25){
+        for (let i = 0; i < 12; i++){
+          const s = (6 + Math.random() * 22) * dpr;
+          ctx.fillStyle = `rgba(${STRIP_COLORS[(Math.random() * 3) | 0]},${(.25 + Math.random() * .4).toFixed(2)})`;
+          ctx.fillRect(Math.random() * w, Math.random() * h, s * (1 + Math.random() * 2), s * .5);
+        }
+      }
+
+      // osciloscopio con separación RGB
+      const mid = h * .79, amp = h * (.04 + .06 * b + .09 * g), sp = 2.5 * dpr * (1 + g * 3);
+      ctx.lineWidth = 1.6 * dpr;
+      [[-sp, 'rgba(255,59,59,.5)'], [sp, 'rgba(0,255,224,.4)'], [0, 'rgba(57,255,106,.85)']].forEach(([dx, col]) => {
+        ctx.strokeStyle = col;
+        ctx.beginPath();
+        for (let i = 0; i <= 96; i++){
+          const x = i / 96 * w;
+          const y = mid + Math.sin(i * .35 + now / 180) * amp * .6 + Math.sin(i * .9 - now / 90) * amp * .3 * (.4 + b) + (Math.random() - .5) * amp * .5 * g;
+          if (i) ctx.lineTo(x + dx, y); else ctx.moveTo(x + dx, y);
+        }
+        ctx.stroke();
+      });
+
+      // lo que suena, repetido por la barra inferior
+      ctx.fillStyle = 'rgba(57,255,106,.95)';
+      const msg = nowPlaying
+        ? `♪  ${(nowPlaying.artist ? nowPlaying.artist + ' — ' : '') + nowPlaying.title}  ♪  `.toUpperCase()
+        : '●  GLITCH CHANNEL  ●  EN DIRECTO  ';
+      marquee(msg, now, w, h, 60);
+    } else {
+      // destello diagonal que cruza la pantalla
+      const T = 4200;
+      const ph = (now % T) / T;
+      const cx = (ph * 1.7 - 0.35) * w;
+      const gr = ctx.createLinearGradient(cx - w * .12, 0, cx + w * .12, 0);
+      gr.addColorStop(0, 'rgba(255,255,255,0)');
+      gr.addColorStop(.5, 'rgba(255,255,255,.14)');
+      gr.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.save();
+      ctx.transform(1, 0, -0.35, 1, h * .17, 0);
+      ctx.fillStyle = gr;
+      ctx.fillRect(cx - w * .12, 0, w * .24, h);
+      ctx.restore();
+
+      // destellos en cruz
+      SPARKS.forEach(([sx, sy], i) => {
+        const s = Math.max(0, Math.sin(now / 380 + i * 1.9));
+        if (s < .05) return;
+        const r = (2 + 7 * s) * dpr;
+        ctx.strokeStyle = i % 2 ? `rgba(245,245,245,${s.toFixed(2)})` : `rgba(57,255,106,${s.toFixed(2)})`;
+        ctx.lineWidth = 1.4 * dpr;
+        ctx.beginPath();
+        ctx.moveTo(sx * w - r, sy * h); ctx.lineTo(sx * w + r, sy * h);
+        ctx.moveTo(sx * w, sy * h - r); ctx.lineTo(sx * w, sy * h + r);
+        ctx.stroke();
+      });
+
+      // rótulo que corre por la barra inferior
+      ctx.fillStyle = 'rgba(57,255,106,.9)';
+      marquee(AD_MARQUEE, now, w, h, 46);
+    }
+  }
+
+  function loop(now){
+    requestAnimationFrame(loop);
+    if (document.hidden) return;
+    const dtMs = lastFx ? now - lastFx : 33;
+    const b = sceneMode === 'radio' ? beatAt(now) : 0;
+    glitchLevel = Math.max(0, glitchLevel - (1 / 450) * 16.7);      // el glitch se apaga en ~0,45 s
+    stage.style.setProperty('--beat', b.toFixed(3));
+    stage.style.setProperty('--gl', (sceneMode === 'radio' ? glitchLevel : 0).toFixed(3));
+    updatePips(performance.now());
+    if (dtMs >= 33){                                        // el canvas va a ~30 fps
+      lastFx = now;
+      drawFx(now, b, Math.min(dtMs / 1000, .1));
+    }
   }
 
   tick();
   setInterval(tick, 1000 / S.fps);
+  if (!reduceMotion) requestAnimationFrame(loop);
+
+  autoplay();   // la radio intenta sonar nada más abrir la página
+
+  /* =====================================================
+     CINTA DE LOGOS: se duplica para que el scroll sea continuo
+     ===================================================== */
+  const track = $('tickerTrack');
+  if (track && !reduceMotion){
+    const base = Array.from(track.children);
+    const copies = () => base.map((a) => {
+      const c = a.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      c.tabIndex = -1;
+      return c;
+    });
+    // bloque 1 = originales + 1 copia (8 logos); bloque 2 = idéntico (8 logos) -> el bucle avanza -50%
+    for (let i = 0; i < 3; i++) copies().forEach((c) => track.appendChild(c));
+  }
 
   /* =====================================================
      PUBLICIDAD (espacio bajo los controles)
