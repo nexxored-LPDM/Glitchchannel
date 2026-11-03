@@ -11,7 +11,7 @@
   gtag('config', 'G-FDG2TTSP8Z');
 </script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Glitch Channel — radio en directo, sin pausas, sin guión.">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#08080a">
@@ -100,6 +100,8 @@
     z-index:0;
   }
 
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+  a, button, input{ -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
   a{ color:inherit; text-decoration:none; }
   button{ font-family:inherit; }
 
@@ -230,6 +232,50 @@
   }
   .player::before{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
   .player::after{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+
+  .brand{
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas:". logo badge" ". sub .";
+    align-items:center;
+    column-gap:10px;
+  }
+  .brand .logo{ grid-area:logo; }
+  .brand .sub{ grid-area:sub; }
+  .powered{
+    grid-area:badge;
+    justify-self:start;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:5px 8px;
+    color:var(--green);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:rgba(255,255,255,.03);
+    transition:border-color .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease);
+  }
+  .powered svg{ width:20px; height:20px; flex-shrink:0; }
+  .powered-txt{ display:flex; flex-direction:column; gap:1px; text-align:left; line-height:1; }
+  .powered-txt small{
+    font-family:var(--font-mono);
+    font-size:6.5px;
+    letter-spacing:.2em;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .powered-txt b{
+    font-family:var(--font-display);
+    font-size:13px;
+    letter-spacing:-.01em;
+    color:var(--text);
+  }
+  .powered:hover,
+  .powered:focus-visible{
+    border-color:var(--green-dim);
+    background:rgba(57,255,106,.08);
+    box-shadow:0 0 18px rgba(57,255,106,.22);
+  }
 
   .logo{
     font-size:clamp(38px, 8vw, 54px);
@@ -363,8 +409,21 @@
     flex-shrink:0;
     transition:color .2s var(--ease);
   }
-  #mute:hover{ color:var(--green); }
+  #mute:hover, #share:hover, #share:focus-visible{ color:var(--green); }
   #mute svg{ width:18px; height:18px; }
+  #share{
+    background:none;
+    border:none;
+    color:var(--muted);
+    cursor:pointer;
+    display:flex;
+    padding:4px;
+    flex-shrink:0;
+    transition:color .2s var(--ease);
+  }
+  #share svg{ width:18px; height:18px; }
+  #share[hidden]{ display:none; }
+  .player.needs-tap .deck .status{ display:none; }   /* el aviso grande de la pantalla ya lo dice */
 
   #volume{
     -webkit-appearance:none;
@@ -995,11 +1054,58 @@
   }
 
   @media (max-width:560px){
-    .player{ padding:40px 24px; }
+    body{
+      justify-content:flex-start;
+      padding:max(14px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    }
+
+    /* patrocinadores en una sola fila compacta */
+    .sponsors{ flex-wrap:nowrap; gap:8px; width:100%; max-width:420px; margin-bottom:14px; }
+    .sponsors a{ flex:1 1 0; width:auto; min-width:0; height:38px; padding:4px 6px; }
+    .sponsors .wordmark{ font-size:15px; }
+    .sponsors .wm-phonostar{ font-size:14px; }
+    .sponsors a.sponsor-cta{ width:auto; flex:1.25 1 0; font-size:9px; letter-spacing:.08em; padding:4px 6px; }
+    .sponsors a.sponsor-cta small{ display:none; }
+
+    /* reproductor casi a todo el ancho: la pantalla gana tamaño */
+    .player{ width:100%; max-width:480px; padding:26px 10px 20px; }
+    .logo{ font-size:40px; }
+    .brand{
+      grid-template-columns:auto auto;
+      grid-template-areas:"logo logo" "sub badge";
+      justify-content:center;
+      row-gap:8px;
+      column-gap:12px;
+    }
+    .brand .logo{ justify-self:center; }
+    .brand .sub{ margin-top:0; justify-self:end; }
+    .screen{ margin-top:16px; }
+    .deck{ gap:6px; padding:8px 10px; }
     .ad-house .d{ display:none; }
-    .deck{ gap:10px; padding:10px; }
-    .deck .volume{ width:108px; }
-    .sponsors a{ width:calc(50% - 7px); max-width:150px; }
+    .offers{ width:100%; margin-top:18px; padding:16px 12px; }
+    .footer{ margin-top:22px; }
+  }
+
+  /* pantallas táctiles: botones de al menos 44 px y menos gasto de batería */
+  @media (pointer:coarse){
+    #play{ width:52px; height:52px; }
+    #mute, #share{ width:44px; height:44px; padding:0; align-items:center; justify-content:center; }
+    #mute svg, #share svg{ width:22px; height:22px; }
+    .deck .volume #volume, .deck .volume label{ display:none; }   /* el volumen se maneja con los botones del móvil */
+    .deck .volume{ width:auto; }
+    .ticker a{ height:40px; padding:0 16px; }
+    .ticker svg{ height:22px; }
+    .powered{ min-height:40px; }
+    .grain{ animation:none; }
+    .gate{ background:rgba(5,5,6,.9); -webkit-backdrop-filter:none; backdrop-filter:none; }
+  }
+
+  /* móvil apaisado: menos relleno vertical */
+  @media (max-height:480px) and (orientation:landscape){
+    body{ justify-content:flex-start; }
+    .player{ padding:20px 24px; }
+    .sponsors{ margin-bottom:12px; }
+    .player{ max-width:84vh; }
   }
 </style>
 </head>
@@ -1023,12 +1129,20 @@
 
 <main class="player" id="player">
 
-  <h1 class="logo" id="logo">
-    <span data-text="GLITCH">GLITCH</span>
-  </h1>
-  <p class="sub">CHANNEL</p>
-
-  <p class="live"><span class="dot" aria-hidden="true"></span> LIVE STREAM</p>
+  <div class="brand">
+    <h1 class="logo" id="logo">
+      <span data-text="GLITCH">GLITCH</span>
+    </h1>
+    <a class="powered" href="https://stream.laut.fm/glitch" target="_blank" rel="noopener noreferrer" aria-label="Powered by laut.fm (se abre en una pestaña nueva)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="2.2" fill="currentColor" stroke="none"/>
+        <path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4"/>
+        <path d="M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"/>
+      </svg>
+      <span class="powered-txt"><small>POWERED BY</small><b>laut.fm</b></span>
+    </a>
+    <p class="sub">CHANNEL</p>
+  </div>
 
   <audio id="radio" preload="none">
     <source src="https://listen.openstream.co/7499/audio">
@@ -1083,6 +1197,13 @@
         <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
       </div>
     </div>
+
+    <button id="share" type="button" aria-label="Compartir la radio" title="Compartir">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/>
+        <path d="M8.3 10.7l7.4-4.1M8.3 13.3l7.4 4.1"/>
+      </svg>
+    </button>
 
     <div class="volume">
       <button id="mute" type="button" aria-label="Silenciar" aria-pressed="false">
@@ -1424,6 +1545,7 @@
   const beatPhase = (now) => (now % BEAT) / BEAT;
   const beatAt = (now) => Math.pow(1 - beatPhase(now), 2.6);    // golpe seco que decae
   const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const COARSE = window.matchMedia('(pointer: coarse)').matches;   // móvil / tablet táctil
   const GLYPHS = '█▓▒░#@$%&*+=/<>01';
 
   /* --- lectura de lo que suena --- */
@@ -1774,7 +1896,7 @@
   let dpr = 1;
   function resizeFx(){
     const r = stage.getBoundingClientRect();
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, COARSE ? 1.5 : 2);   // menos píxeles en móvil = menos batería
     fx.width = Math.max(1, Math.round(r.width * dpr));
     fx.height = Math.max(1, Math.round(r.height * dpr));
     if (npRefs) fillNow(false);                             // reajusta el tamaño del texto
@@ -1783,7 +1905,7 @@
   else window.addEventListener('resize', resizeFx);
   resizeFx();
 
-  const particles = Array.from({ length: 26 }, () => ({}));
+  const particles = Array.from({ length: COARSE ? 14 : 26 }, () => ({}));
   function resetParticle(p, initial){
     p.x = Math.random();
     p.y = initial === false ? 1.05 : Math.random();
@@ -1915,9 +2037,14 @@
     }
   }
 
+  let stageVisible = true;
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver((es) => { stageVisible = es[0].isIntersecting; }).observe(stage);
+  }
+
   function loop(now){
     requestAnimationFrame(loop);
-    if (document.hidden) return;
+    if (document.hidden || !stageVisible) return;
     const dtMs = lastFx ? now - lastFx : 33;
     const b = sceneMode === 'radio' ? beatAt(now) : 0;
     glitchLevel = Math.max(0, glitchLevel - (1 / 450) * 16.7);      // el glitch se apaga en ~0,45 s
@@ -1935,6 +2062,29 @@
   if (!reduceMotion) requestAnimationFrame(loop);
 
   autoplay();   // la radio intenta sonar nada más abrir la página
+
+  /* =====================================================
+     COMPARTIR: abre el menú de compartir del móvil (o copia el enlace)
+     ===================================================== */
+  const shareBtn = $('share');
+  if (shareBtn){
+    if (!navigator.share && !(navigator.clipboard && navigator.clipboard.writeText)) shareBtn.hidden = true;
+    shareBtn.addEventListener('click', async () => {
+      const song = nowPlaying ? ((nowPlaying.artist ? nowPlaying.artist + ' — ' : '') + nowPlaying.title) : '';
+      const text = song ? `Estoy escuchando ${song} en Glitch Channel 🎧` : 'Escucha Glitch Channel, radio en directo 🎧';
+      const url = location.href.split('#')[0];
+      try{
+        if (navigator.share){
+          await navigator.share({ title: 'Glitch Channel', text, url });
+        } else {
+          await navigator.clipboard.writeText(text + ' ' + url);
+          const prev = { t: status.textContent, s: status.dataset.state };
+          setStatus('ENLACE COPIADO', 'on-air');
+          setTimeout(() => setStatus(prev.t, prev.s), 1600);
+        }
+      } catch(e){ /* el usuario cerró el menú de compartir */ }
+    });
+  }
 
   /* =====================================================
      CINTA DE LOGOS: se duplica para que el scroll sea continuo
